@@ -17,3 +17,9 @@
 ## Sau Spike A
 
 Tier 1 hướng tới 8 món thật + 2 troll, report đủ nội dung và đường quay về 1A. Chờ chốt catalog nam, mapping tuổi hai bộ, mức ngân sách, nội dung report, mascot và joke, luật hunt 1A, stack, vòng đời phòng và kế hoạch Noel. Marketplace, giao dịch và AI suy luận gu là hướng sau MVP. Xem [lịch sử](HISTORY.md) để đọc các bản đầy đủ.
+
+## Tạo hình và animation GuBot
+
+- GuBot là kem ốc quế tan lệch một bên, tụ từ cùng lưới số 0/1 đa sắc trên nền trắng ngà. Rìa silhouette chuyển dần về mật độ và màu của nền. Mắt nheo ước lệ.
+- **Miệng là kênh biểu cảm chính.** Biên miệng sắc, đọc được ở kích thước nhỏ, có thể rõ như một nét vẽ. Quy tắc làm mềm rìa áp dụng cho silhouette bên ngoài.
+- Khi triển khai, tách pose và timing của miệng khỏi hình thân để đổi độ cong, độ mở và độ lệch độc lập. Duy trì điểm neo theo mặt khi thân biến dạng. Pose mặc định tự tin, nhiệt huyết. Các pose khác bao gồm khoe khoang, xin lỗi, ngu ngơ và kiệt sức.

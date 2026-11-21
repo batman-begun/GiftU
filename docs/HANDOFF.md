@@ -14,3 +14,5 @@
 1. UAT trên Android bằng hai thiết bị hoặc hai cửa sổ riêng. Tạo phòng, chuyển link chơi, tải lại giữa lượt, đồng ý hoặc từ chối, rồi kiểm link report. Kiểm PWA install/offline, swipe, âm thanh và chuyển ngôn ngữ.
 2. Bổ sung Report v0 chi tiết. Bản live chỉ hiện hướng đã chọn, chưa có gợi ý mua/mẹo và chưa có nhánh 1A. Age/budget, nội dung catalog thật, rate limit tạo phòng và chính sách replay còn mở.
 3. Tìm source Matrix Gate D nếu cần nâng hiệu ứng. Khi release tiếp, giữ origin hiện tại và ghi Sites version, SHA, kiểm chứng live và bản rollback trong file này.
+
+**GuBot art direction.** Chủ dự án duyệt silhouette Binary Matrix rìa mềm và yêu cầu miệng sắc làm kênh biểu cảm chính. Xem mục Tạo hình và animation trong PRODUCT.md trước khi implement. Đây là quyết định thiết kế, animation live còn chờ triển khai.
