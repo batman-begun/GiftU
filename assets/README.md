@@ -9,6 +9,7 @@
 ## Index
 
 - [GuBot](mockups/gubot/) — baseline tạo hình kem tan và nét cười bằng số.
+- [Vật phẩm clay 2.5D](../sites/web/clay-gifts.svg) — năm SVG tự vẽ cho Spike A, ứng viên chờ duyệt trên máy thật.
 - [Asset mẫu](samples/) — index sẽ được bổ sung khi có mẫu đầu tiên.
 
 ## Thêm file

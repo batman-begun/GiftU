@@ -1,7 +1,7 @@
-import {botCell, cellNoise, digitFor, itemCell, mouthCell, palette, poses} from './matrix-art.js';
+import {botCell, cellNoise, digitFor, mouthCell, palette, poses} from './matrix-art.js';
 
 const STEP = 6;
-const EFFECT_MS = 330;
+export const TEAR_MS = 640;
 const WAVE_MS = 880;
 const ambientInk = ['#7a5146', '#7e506c', '#746187', '#526779', '#746221', '#4d756e'];
 const lerp = (from, to, amount) => from + (to - from) * amount;
@@ -14,8 +14,8 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
   let frame = null;
   let points = [];
   let width = 0, height = 0;
-  let botScale = 1, itemScale = 1;
-  let itemId = null, effect = null, pose = poses.confident;
+  let botScale = 1;
+  let itemId = null, tearStart = null, pose = poses.confident;
   let currentPose = pose;
   let lastDraw = 0;
   let wave;
@@ -36,8 +36,8 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    botScale = Math.max(.1, Math.min(bounds.width / 74, bounds.height / 90));
-    itemScale = Math.max(.1, Math.min(itemBounds.width, itemBounds.height) / 15);
+    botScale = Math.max(.1, Math.min(bounds.width / 67, bounds.height / 85));
+    const tearRadius = Math.min(itemBounds.width, itemBounds.height, 240) * .56;
     const botX = bounds.left - rect.left + bounds.width / 2;
     const botY = bounds.top - rect.top + bounds.height / 2;
     const itemX = itemBounds.left - rect.left + itemBounds.width / 2;
@@ -55,9 +55,9 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
         const insideBotBox = bx > 3 && bx < 78 && by > 17 && by < 110;
         const v = cellNoise(col, row);
         const art = insideBotBox ? botCell(bx, by, Math.max(4.8, STEP / botScale * 2.1), cellNoise(col, row, 1)) : null;
-        const ix = (x - itemX) / itemScale;
-        const iy = (y - itemY) / itemScale;
-        const byItem = itemId !== null && Math.abs(ix) < 10 && Math.abs(iy) < 13;
+        const iy = tearRadius ? (y - itemY) / tearRadius : 0;
+        const seam = (x - itemX) - tearRadius * (.24 * iy + .08 * Math.sin(iy * 19));
+        const byItem = itemId !== null && Math.abs(iy) < 1 && Math.abs(seam) < tearRadius;
         if (v >= .32 && !art?.strength && !byItem) continue;
         let shadeFactor = 1;
         for (const box of textBounds) {
@@ -66,7 +66,7 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
           shadeFactor = Math.min(shadeFactor, .18 + Math.min(1, Math.max(dx, dy) / 16) * .82);
         }
         points.push({
-          x, y, bx, by, ix, iy, v, art, shadeFactor,
+          x, y, bx, by, iy, seam, tearRadius, v, art, shadeFactor,
           byItem, bit: digitFor(cellNoise(col, row, 2)),
           ink: ambientInk[Math.floor(cellNoise(col, row, 3) * ambientInk.length)],
           nearMouth: bx > 22 && bx < 54 && by > 41 && by < 63,
@@ -79,7 +79,8 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
     frame = null;
     if (document.hidden) return;
     const reduced = motion.matches;
-    const age = effect ? Math.min(1, (time - effect.start) / EFFECT_MS) : 0;
+    if (tearStart !== null && (reduced || time - tearStart >= TEAR_MS)) tearStart = null;
+    const opening = tearStart === null ? 0 : Math.sin(Math.PI * (time - tearStart) / TEAR_MS);
     if (wave && (reduced || time - wave.time >= WAVE_MS)) wave = undefined;
     if (reduced) currentPose = pose;
     else currentPose = pose.map((value, index) => lerp(currentPose[index], value, .42));
@@ -89,21 +90,15 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
     const animatingPose = pose.some((value, i) => Math.abs(value - currentPose[i]) > .035);
     ctx.clearRect(0, 0, width, height);
     ctx.font = '7px monospace';
-    const mouthThickness = Math.max(.92, STEP / botScale * .73);
-    const mouthMargin = STEP / botScale * .85;
-    const reveal = effect?.type === 'reveal' ? age : 1;
-    const reacting = effect && effect.type !== 'reveal';
-    const opacity = reacting ? 1 - age : 1;
-    const scaleX = effect?.type === 'like' ? 1 + Math.sin(age * Math.PI) * .38 : 1;
-    const scaleY = effect?.type === 'like' ? 1 - age * .37 : 1;
-    const drop = effect?.type === 'no' ? age * 5 : 0;
+    const mouthThickness = Math.max(1.05, STEP / botScale * .84);
+    const mouthMargin = STEP / botScale * .95;
     for (const p of points) {
       let ink = p.ink;
       let alpha = p.v < .32 ? (calm ? .22 : .39) : 0;
       let x = p.x, y = p.y;
       if (p.art?.strength && p.v < .26 + p.art.strength * .72) {
         ink = palette[p.art.ink];
-        alpha = .34 + p.art.strength * (.62 + breathing);
+        alpha = .38 + p.art.strength * (.60 + breathing);
       }
       if (p.nearMouth) {
         if (mouthCell(p.bx, p.by, currentPose, mouthThickness)) {
@@ -113,11 +108,16 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
           alpha *= .34;
         }
       }
-      if (p.byItem && Math.abs(p.iy) <= Math.max(.5, reveal * 7) + drop) {
-        const itemInk = itemCell(itemId, p.ix / scaleX + 6.5, (p.iy - drop) / scaleY + 6.5);
-        if (itemInk !== undefined && (!reacting || p.v < opacity)) {
-          ink = palette[itemInk];
-          alpha = .92;
+      if (opening && p.byItem && !p.art?.strength) {
+        const lip = p.tearRadius * opening * Math.pow(1 - Math.abs(p.iy), .85) * .74;
+        const distance = Math.abs(p.seam);
+        if (distance < lip + 14 && lip > 1) {
+          const edge = Math.max(0, 1 - distance / (lip + 14));
+          const side = p.seam < 0 ? -1 : 1;
+          x += side * lip * edge;
+          y += side * edge * opening * (p.iy * 14 + Math.sin(p.y) * 4);
+          alpha = Math.max(alpha, opening * (p.v < .58 ? .91 : .46) * edge);
+          if (edge > .24) ink = palette[p.v < .5 ? 8 : 3];
         }
       }
       if (wave && alpha && p.shadeFactor > .7) {
@@ -139,14 +139,14 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
       }
     }
     ctx.globalAlpha = 1;
-    if (!reduced && (!calm || animatingPose || wave || (effect && age < 1))) queue();
+    if (!reduced && (!calm || animatingPose || wave || tearStart !== null)) queue();
   }
 
   function queue() {
     if (frame !== null || document.hidden) return;
     frame = requestAnimationFrame(time => {
       frame = null;
-      const active = wave || (effect && time - effect.start < EFFECT_MS) ||
+      const active = wave || tearStart !== null ||
         pose.some((value, index) => Math.abs(value - currentPose[index]) > .035);
       if (!motion.matches && time - lastDraw < (active ? 28 : 72)) return queue();
       lastDraw = time;
@@ -173,15 +173,13 @@ export function matrix(canvas, avatar, artifact, {shade = () => [], quiet = () =
   });
   globalThis.addEventListener?.('scroll', refresh, {passive:true});
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  motion.addEventListener('change', () => { effect = wave = null; queue(); });
+  motion.addEventListener('change', () => { tearStart = null; wave = undefined; queue(); });
 
   return ({ item = null, mood = 'confident', reaction } = {}) => {
     pose = poses[mood] ?? poses.confident;
-    if (motion.matches) effect = null;
-    else if (reaction) effect = { type: reaction, start: performance.now() };
-    else if (item !== itemId || (effect && effect.type !== 'reveal')) {
-      effect = item === null ? null : { type: 'reveal', start: performance.now() };
-    }
+    if (item !== itemId) {
+      tearStart = motion.matches || item === null ? null : performance.now();
+    } else if (reaction) tearStart = null;
     const layoutChanged = reaction === undefined || item !== itemId || !points.length;
     itemId = item;
     if (layoutChanged) refresh();

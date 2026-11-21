@@ -1,10 +1,10 @@
-import {matrix} from './matrix.js';
+import {matrix, TEAR_MS} from './matrix.js';
+import {giftSound} from './sound.js';
 
 const copy = {
   vi: {
     her: "Cho nàng", him: "Cho chàng",
-    install: "Cài app", soundOff: "Tắt tiếng",
-    soundOn: "Bật tiếng", greeting: "Tôi biết rõ gu của bạn. Độ chính xác… đang tải.",
+    install: "Cài app", sound: "Âm thanh", greeting: "Tôi biết rõ gu của bạn. Độ chính xác… đang tải.",
     like: "Thích", no: "Không hợp",
     skip: "Bỏ qua", undo: "Hoàn tác",
     demoConsent: "Thử bước chia sẻ", demoResult: "Kết quả thử",
@@ -15,8 +15,7 @@ const copy = {
   },
   en: {
     her: "For her", him: "For him",
-    install: "Install app", soundOff: "Sound off",
-    soundOn: "Sound on", greeting: "I know your taste perfectly. Accuracy… loading.",
+    install: "Install app", sound: "Sound", greeting: "I know your taste perfectly. Accuracy… loading.",
     like: "Like", no: "Not for me",
     skip: "Skip", undo: "Undo",
     demoConsent: "Try the share step", demoResult: "Test result",
@@ -27,8 +26,7 @@ const copy = {
   },
   zh: {
     her: "送给她", him: "送给他",
-    install: "安装应用", soundOff: "声音已关",
-    soundOn: "声音已开", greeting: "我太懂你的喜好了。准确率……加载中。",
+    install: "安装应用", sound: "声音", greeting: "我太懂你的喜好了。准确率……加载中。",
     like: "喜欢", no: "不适合我",
     skip: "跳过", undo: "撤销",
     demoConsent: "试用分享步骤", demoResult: "测试结果",
@@ -52,7 +50,9 @@ const link = new URLSearchParams(location.hash.slice(1));
 const playToken = link.get('play');
 const reportToken = link.get('report');
 const key = 'giftu-spike-a-v1';
-let state = fresh(), lang, sound = false, audio, pending = false, installPrompt;
+let state = fresh(), lang, pending = false, installPrompt;
+let sound = false;
+const soundFX = giftSound();
 try {
   const stored = JSON.parse(localStorage.getItem(key));
   if (!playToken && !reportToken && stored && Object.hasOwn(packs,stored.profile) && ['idle','play','review','consent','done'].includes(stored.phase) && Array.isArray(stored.reactions) && Array.isArray(stored.kept)) state = stored;
@@ -208,16 +208,12 @@ async function react(value) {
     mood: {like:'boast', no:'sorry', skip:'puzzled'}[value],
     reaction: value,
   });
-  if (sound && audio && value !== 'skip') {
-    const osc = audio.createOscillator(), gain = audio.createGain(), now = audio.currentTime;
-    osc.type = value === 'like' ? 'triangle' : 'sawtooth';
-    osc.frequency.setValueAtTime(value === 'like' ? 330 : 150,now);
-    osc.frequency.exponentialRampToValueAtTime(45,now+.22);
-    gain.gain.setValueAtTime(.09,now);
-    gain.gain.exponentialRampToValueAtTime(.001,now+.22);
-    osc.connect(gain).connect(audio.destination);
-    osc.start(); osc.stop(now+.23);
-  }
+  soundFX.play(value);
+  animateGift({
+    like: [{transform:'scale(1)'}, {transform:'scale(1.14,.87)'}, {transform:'scale(.58)', opacity:0}],
+    no: [{transform:'none'}, {transform:'translateY(34%) rotate(12deg) scale(.84)', opacity:0}],
+    skip: [{transform:'none'}, {transform:'translateX(26%) rotate(-12deg)', opacity:0}],
+  }[value], 330, 'ease-in');
   if (state.reactions.length === deck().length) review();
   store();
   setTimeout(() => { pending = false; render(); focus($('game')); },motion.matches?0:330);
@@ -256,7 +252,7 @@ function render() {
   $('lang').setAttribute('aria-label', {vi:'Ngôn ngữ', en:'Language', zh:'语言'}[lang]);
   $('profiles').setAttribute('aria-label', {vi:'Bộ gợi ý quà', en:'Gift catalog', zh:'礼物目录'}[lang]);
   const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone || window.giftuInstalled;
-  for (const [id, n] of Object.entries({her:'her', him:'him', install:'install', sound:sound ? 'soundOn' : 'soundOff', helptext:'help', close:'close'})) {
+  for (const [id, n] of Object.entries({her:'her', him:'him', install:'install', sound:'sound', helptext:'help', close:'close'})) {
     $(id).textContent = label(n);
   }
   $('sound').setAttribute('aria-pressed', sound);
@@ -264,7 +260,7 @@ function render() {
     homeOpen || state.phase === 'idle' ? 'entry' : state.phase;
   stage.dataset.screen = screen;
   $('install').hidden = Boolean(installed || screen === 'play');
-  $('sound').hidden = screen !== 'play';
+  $('sound').hidden = screen !== 'play' && (screen !== 'entry' || Boolean(reportToken));
   $('intro').textContent = playToken ? label('greeting') : text('intro');
   $('headline').textContent = text('headline');
   $('start').textContent = playToken ? text('play') : text(resumeDemo() ? 'resume' : 'start');
@@ -286,6 +282,7 @@ function render() {
   const activeItem = screen === 'play' ? deck()[state.reactions.length] : null;
   $('scene').classList.toggle('playing', activeItem !== null);
   $('artifact').hidden = activeItem === null;
+  showGift(activeItem);
   const game = $('game');
   game.hidden = screen === 'entry' || screen === 'setup';
   game.replaceChildren();
@@ -362,6 +359,29 @@ function showPicks(parent, ids) {
   for (const id of ids) add(list, 'li', label('gifts')[id]);
 }
 
+const clay = $('clay-gift');
+let visibleGift = null, giftAnimation;
+function animateGift(keyframes, duration, easing) {
+  giftAnimation?.cancel();
+  giftAnimation = motion.matches ? null : clay.animate?.(keyframes, {duration, easing, fill:'forwards'});
+}
+
+function showGift(id) {
+  if (id === visibleGift) return;
+  visibleGift = id;
+  giftAnimation?.cancel();
+  if (id === null) return;
+  $('gift-shape').setAttribute('href', './clay-gifts.svg#gift-' + id);
+  animateGift([
+    {clipPath:'inset(48% 50%)', transform:'scale(.76) rotate(-10deg)', opacity:0},
+    {clipPath:'inset(22% 17%)', transform:'scale(.88) rotate(-6deg)', opacity:1, offset:.42},
+    {clipPath:'inset(0)', transform:'scale(1.07) rotate(2deg)', offset:.79},
+    {clipPath:'inset(0)', transform:'none', opacity:1},
+  ], TEAR_MS, 'ease-out');
+  soundFX.play('tear');
+}
+motion.addEventListener('change', () => { if (motion.matches) giftAnimation?.cancel(); });
+
 const artifact = $('artifact');
 let swipeOrigin;
 artifact.onpointerdown = event => {
@@ -415,13 +435,12 @@ $('lang').onchange = event => {
   try { localStorage.setItem('giftu-language',lang); } catch {}
   if (!pending) render();
 };
-$('sound').onclick = async () => {
-  sound = !sound;
-  if (sound && window.AudioContext) {
-    audio ??= new AudioContext();
-    try { await audio.resume(); } catch {}
-  }
-  if (!pending) render();
+$('sound').onclick = async event => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  sound = await soundFX.toggle();
+  button.setAttribute('aria-pressed', sound);
+  button.disabled = false;
 };
 window.addEventListener('beforeinstallprompt',event=>{ event.preventDefault(); installPrompt = event; });
 window.addEventListener('appinstalled',()=>{ window.giftuInstalled = true; installPrompt = undefined; if (!pending) render(); });

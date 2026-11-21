@@ -127,7 +127,18 @@ main {
   width: min(100%, 39rem);
   height: clamp(11rem, 43dvh, 26rem);
 }
-#artifact { touch-action: pan-y; }
+#artifact {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  touch-action: pan-y;
+}
+#clay-gift {
+  display: block;
+  width: min(100%, 15rem);
+  max-height: 100%;
+  pointer-events: none;
+}
 .experience {
   width: min(100%, 29rem);
   justify-self: center;

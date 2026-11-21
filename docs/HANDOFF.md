@@ -12,6 +12,14 @@
 
 **Tiếp theo** là duyệt bố cục và test Android ứng viên v0.4.0, sau đó chốt phát hành Spike A trước khi làm Report v0 và nối sang nhánh 1A.
 
+### UAT bổ sung · GuBot, vật phẩm và âm thanh
+
+- GuBot giữ thân và miệng bằng glyph. Bản ứng viên tăng tỉ lệ nhân vật, tương phản và độ dày nét miệng.
+- Mỗi lượt mới xé lưới số thành hai mép để lộ một trong năm vật phẩm clay SVG 2.5D. Khi giảm chuyển động, vật phẩm hiện tĩnh. SVG và module âm thanh có trong cache PWA.
+- Nút âm thanh có từ màn mở. Người dùng bật bằng cử chỉ rồi mới nghe tiếng xé và tiếng cảm thán tổng hợp của GuBot khi Thích, Không hợp hoặc Bỏ qua.
+- Build và 5/5 test Sites pass. Preview Chrome 320–430 px render vật phẩm SVG. Ở 390 px đã bật âm thanh, thử cả ba phản ứng và vào review. Cần nghe trực tiếp trên thiết bị để duyệt âm lượng, âm sắc và timing.
+- Bản live vẫn là v0.3.0. Trước khi phát hành cần xử lý hash mở link có cả hai vai trò và link rỗng, rồi UAT Android về độ rõ nét miệng/vật phẩm, độ mượt cú xé và âm thanh.
+
 ## Đã làm
 
 - Bản live có ba ngôn ngữ, PWA, demo lưu trên thiết bị và phòng chia sẻ với link chơi và link report riêng. Worker + D1 lưu deck, tiến độ và consent. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
