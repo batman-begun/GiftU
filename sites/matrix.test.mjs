@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { botCell, itemCell, mouthCell, palette, poses } from './web/matrix-art.js';
+import { botCell, mouthCell, palette, poses } from './web/matrix-art.js';
 import { matrix } from './web/matrix.js';
 
 test('the scoop, cone and spill stay distinguishable with a feathered body', () => {
@@ -13,18 +13,15 @@ test('the scoop, cone and spill stay distinguishable with a feathered body', () 
   assert.ok(botCell(26, 43.5, 5, .5).strength < .12);
 });
 
-test('every expression and item has distinct glyph-cell geometry', () => {
+test('every expression has distinct glyph-cell geometry', () => {
   const positions = Array.from({length: 35 * 27}, (_, i) => [i % 35 + 21, Math.floor(i / 35) + 39]);
   const mouths = Object.values(poses).map(pose => positions
     .map(([x, y]) => Number(mouthCell(x, y, pose, 1))).join(''));
   assert.equal(new Set(mouths).size, 5);
-  const items = Array.from({length: 5}, (_, id) => Array.from({length: 169}, (_, i) =>
-    Number(itemCell(id, i % 13, Math.floor(i / 13)) !== undefined)).join(''));
-  assert.equal(new Set(items).size, 5);
-  assert.ok(items.every(mask => mask.includes('1')));
+
 });
 
-test('mobile idle and gameplay draw only separated binary glyphs on one grid', t => {
+test('the tear displaces binary glyphs before settling back onto the grid', t => {
   const frames = new Map();
   let serial = 0;
   let now = 100;
@@ -55,7 +52,7 @@ test('mobile idle and gameplay draw only separated binary glyphs on one grid', t
   const avatar = {getBoundingClientRect:() => ({left:12, top:58, width:198, height:188})};
   const artifact = {getBoundingClientRect:() => ({left:216, top:58, width:130, height:188})};
   const change = matrix(canvas, avatar, artifact);
-  function tick(time) {
+  function tick(time, moving = false) {
     now = time;
     const scheduled = [...frames.values()];
     frames.clear();
@@ -63,8 +60,10 @@ test('mobile idle and gameplay draw only separated binary glyphs on one grid', t
     const occupied = new Set();
     for (const [bit, x, y] of ink) {
       assert.match(bit, /^[01]$/);
-      assert.equal(x % 6, 3);
-      assert.equal(y % 6, 3);
+      if (!moving) {
+        assert.equal(x % 6, 3);
+        assert.equal(y % 6, 3);
+      }
       const position = x + ',' + y;
       assert.ok(!occupied.has(position));
       occupied.add(position);
@@ -75,12 +74,12 @@ test('mobile idle and gameplay draw only separated binary glyphs on one grid', t
   const confident = ink.filter(cell => cell[3] === palette[8]);
   assert.ok(confident.length >= 6);
   change({item:3, mood:'confident'});
-  tick(150);
-  tick(450);
-  assert.ok(ink.some(cell => cell[1] > 220 && cell[3] === palette[6]));
+  tick(420, true);
+  assert.ok(ink.some(([, x, y, color]) => x > 220 && x % 6 !== 3 && y % 6 !== 3 && color === palette[3]));
+  tick(760);
   change({item:3, mood:'sorry', reaction:'no'});
-  tick(500);
-  tick(550);
-  tick(600);
+  tick(820);
+  tick(900);
+  tick(980);
   assert.notDeepEqual(ink.filter(cell => cell[3] === palette[8]), confident);
 });

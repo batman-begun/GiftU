@@ -29,3 +29,12 @@ test('shared room works across independent clients and enforces consent', async 
     assert.deepEqual((await call('report',sender))[1],approved?{status:'shared',ids:[id]}:{status:'unavailable'});
   }
 });
+
+
+test('the clay sprite is served with its SVG media type', async () => {
+  const response = await worker.fetch(new Request('https://giftu.test/clay-gifts.svg'), {});
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Content-Type'), 'image/svg+xml');
+  const source = await response.text();
+  for (let id = 0; id < 5; id++) assert.match(source, new RegExp('id="gift-' + id + '"'));
+});
