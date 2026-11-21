@@ -1,0 +1,40 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
+import { readFileSync } from 'node:fs';
+import worker from './dist/server/index.js';
+
+test('shared room works across independent clients and enforces consent', async () => {
+  const sql = new DatabaseSync(':memory:');
+  sql.exec(readFileSync('drizzle/0000_rooms.sql','utf8'));
+  const DB = {
+    prepare: query => ({ bind: (...args) => ({
+      first: () => sql.prepare(query).get(...args),
+      run: () => ({meta:sql.prepare(query).run(...args)}),
+    }) }),
+    batch: statements => statements.map(statement => statement.run()),
+  };
+  async function call(path, token, data) {
+    const headers = token ? {Authorization:'Bearer '+token} : {};
+    const response = await worker.fetch(new Request('https://giftu.test/api/'+path,{
+      method:data?'POST':'GET',headers,body:data && JSON.stringify(data),
+    }),{DB});
+    return [response.status, await response.json()];
+  }
+  for (const [profile,id,approved] of [['her',1,true],['him',3,false]]) {
+    const [created,{sender,receiver}] = await call('rooms',null,{profile});
+    assert.equal(created,201);
+    assert.equal((await call('report',receiver))[0],404);
+    assert.equal((await call('play',sender))[0],404);
+    assert.equal((await call('play',receiver))[1].deck[1],id);
+    for (const [index,action] of ['like','like','skip'].entries()) {
+      assert.equal((await call('react',receiver,{index,action}))[0],200);
+    }
+    assert.deepEqual((await call('play',receiver))[1].progress,['like','like','skip']);
+    assert.equal((await call('finish',receiver,{index:3,approved:true,ids:[0]}))[0],400);
+    assert.deepEqual((await call('report',sender))[1],{status:'unavailable'});
+    assert.equal((await call('finish',receiver,{index:3,approved,ids:approved?[id]:[]}))[0],200);
+    assert.deepEqual((await call('report',sender))[1],approved?{status:'shared',ids:[id]}:{status:'unavailable'});
+  }
+  sql.close();
+});

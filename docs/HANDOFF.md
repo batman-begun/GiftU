@@ -1,18 +1,16 @@
 # Bàn giao hiện tại
 
-**22/11/2026 · Spike A.** [GiftU live](https://giftu.batmanbegun.chatgpt.site/) đã public, bản 0.1.0 (Sites version 1). Live có ba ngôn ngữ, Binary Matrix, GuBot và PWA. Chạy thử trên live đã xác nhận đổi cả ba ngôn ngữ và loại món troll khỏi kết quả. Cài đặt và offline trên điện thoại thật còn chờ UAT. Live lưu trên thiết bị và mô phỏng consent.
+**22/11/2026 · Spike A v0.2.0** · [Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/). Sites version 2 đã publish, source Sites `d25de5c6bb4b5972ec872dab9f0b2080718e9796`. Bản trước để rollback là Sites version 1.
 
-**Backend Spike A chạy local trên GitHub.** Hai bộ Cho nàng / Cho chàng dùng chung luồng GuBot. Tạo phòng, gửi link chơi riêng, giữ link report, phản ứng với 2 món thật và 1 troll, undo, review, consent và đọc report. SQLite lưu tiến độ và bản chụp nội dung. Hai token riêng chỉ được lưu dưới dạng hash, phòng hết hạn sau 7 ngày.
+## Đã làm
 
-## Chạy và kiểm tra
-
-- Cần Node.js 24 trở lên. Chạy `npm start`, mở `http://localhost:3000`. Không cần cài dependency. Có thể đặt `PORT` và `GIFTU_DB`.
-- Chạy `npm test` để kiểm API cả hai bộ, quyền link, consent, resume, undo, stale request và loại troll khỏi report. Đã chạy, 3/3 pass. `node --check public/app.js` pass. Đã smoke-test server khởi động.
-- Kiểm UI thủ công bằng hai tab: tạo phòng, mở hai link, thử tải lại giữa lượt, review, đồng ý hoặc từ chối, mở hoặc cập nhật report. Chromium local không khởi động được vì môi trường chặn socket hệ thống. Android thật chưa UAT.
+- Đưa giao diện Matrix, GuBot, ba ngôn ngữ và tài sản PWA vào `sites/`. Có demo lưu trên thiết bị và luồng phòng chia sẻ qua hai link riêng.
+- Worker + D1 lưu deck, tiến độ và consent. Link bearer riêng, token hash trong storage, hết hạn sau 7 ngày. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
+- Chạy `cd sites && node build.mjs && node --test worker.test.mjs` với Node 24+. Kiểm thử Worker qua SQLite shim pass cho cả hai catalog, quyền link, reload qua API, troll và consent. Hosted build publish thành công và POST tạo phòng trả HTTP 201.
+- Node/SQLite ở repo root là spike local trước đó. Source phục vụ release nằm trong `sites/`.
 
 ## Việc tiếp theo
 
-1. Đối chiếu giao diện đang live với code GitHub, rồi đưa phần Matrix, PWA và ba ngôn ngữ vào cùng nguồn GitHub trước khi tích hợp backend lên Sites. Xác minh cách lưu dữ liệu và kiểm quyền bằng Sites. Node + SQLite là lựa chọn local cho spike. Publish bản tích hợp lên chính URL ở trên.
-2. Test hai flow trên Android thật, gồm swipe/scroll, copy link, âm thanh, reload, hiệu ứng và chất hài. Tìm source Matrix Gate D đã qua UAT. Hiện dùng CSS, emoji và âm tổng hợp tạm thay cho renderer và assets cuối.
-3. Trước khi mở preview ra ngoài, quyết định rate limit tạo phòng, dọn dữ liệu hết hạn và quy tắc vận hành. Lượt đã hoàn thành chỉ đọc, lịch sử replay và khôi phục link sender chưa có.
-4. Chốt catalog và gameplay 1A sau UAT. Bản này dùng thứ tự fixture cố định và lưu snapshot của từng phòng. Chưa có tuổi/ngân sách, seed/version riêng, ba hướng mua mỗi thẻ hoặc màn tạo hunt.
+1. UAT trên Android bằng hai thiết bị hoặc hai cửa sổ riêng. Tạo phòng, chuyển link chơi, tải lại giữa lượt, đồng ý hoặc từ chối, rồi kiểm link report. Kiểm PWA install/offline, swipe, âm thanh và chuyển ngôn ngữ.
+2. Bổ sung Report v0 chi tiết. Bản live chỉ hiện hướng đã chọn, chưa có gợi ý mua/mẹo và chưa có nhánh 1A. Age/budget, nội dung catalog thật, rate limit tạo phòng và chính sách replay còn mở.
+3. Tìm source Matrix Gate D nếu cần nâng hiệu ứng. Khi release tiếp, giữ origin hiện tại và ghi Sites version, SHA, kiểm chứng live và bản rollback trong file này.
