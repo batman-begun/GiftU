@@ -6,7 +6,7 @@
 
 - Đưa giao diện Matrix, GuBot, ba ngôn ngữ và tài sản PWA vào `sites/`. Có demo lưu trên thiết bị và luồng phòng chia sẻ qua hai link riêng.
 - Worker + D1 lưu deck, tiến độ và consent. Link bearer riêng, token hash trong storage, hết hạn sau 7 ngày. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
-- Chạy `cd sites && node build.mjs && node --test worker.test.mjs` với Node 24+. Kiểm thử Worker qua SQLite shim pass cho cả hai catalog, quyền link, reload qua API, troll và consent. Hosted build publish thành công và POST tạo phòng trả HTTP 201.
+- Chạy `cd sites && node build.mjs && node --test worker.test.mjs` với Node 24+. Kiểm thử Worker qua SQLite shim pass cho cả hai catalog, quyền link, reload qua API, troll và consent. Sites v2 publish thành công. Smoke test HTTPS trên live pass cả hai bộ, gồm tạo phòng, chặn link chơi đọc report, tải lại tiến độ, chặn troll, đồng ý chia sẻ và giữ riêng. POST smoke dùng Origin của chính site.
 - Node/SQLite ở repo root là spike local trước đó. Source phục vụ release nằm trong `sites/`.
 
 ## Việc tiếp theo
