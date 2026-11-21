@@ -7,9 +7,8 @@ const copy = {
 };
 const $ = id => document.getElementById(id);
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-const setMatrix = matrix($('matrix'));
+const setMatrix = matrix($('matrix'), $('avatar'), $('artifact'));
 const packs = {her:[0,1,2], him:[0,3,4]};
-const icons = ['🧻','🕯️','🏺','☕','🎟️'];
 const fresh = () => ({profile:'her', phase:'idle', reactions:[], kept:[], shared:false});
 const link = new URLSearchParams(location.hash.slice(1));
 const playToken = link.get('play');
@@ -96,7 +95,11 @@ async function react(value) {
       return;
     }
   } else state.reactions.push(value);
-  $('game').querySelector('.item').className = 'item '+value;
+  setMatrix({
+    item: deck()[state.reactions.length - 1],
+    mood: {like:'boast', no:'sorry', skip:'puzzled'}[value],
+    reaction: value,
+  });
   if (sound && audio && value !== 'skip') {
     const osc = audio.createOscillator(), gain = audio.createGain(), now = audio.currentTime;
     osc.type = value === 'like' ? 'triangle' : 'sawtooth';
@@ -124,13 +127,20 @@ function render() {
   $('lang').value = lang;
   $('lang').setAttribute('aria-label',{vi:'Ngôn ngữ',en:'Language',zh:'语言'}[lang]);
   $('profiles').setAttribute('aria-label',{vi:'Bộ gợi ý quà',en:'Gift catalog',zh:'礼物目录'}[lang]);
-  $('build').textContent = {vi:'BẢN THỬ LIVE',en:'LIVE TESTBED',zh:'在线测试版'}[lang]+' · 0.2.0';
+  $('build').textContent = {vi:'BẢN THỬ LIVE',en:'LIVE TESTBED',zh:'在线测试版'}[lang]+' · 0.3.0';
   const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone || window.giftuInstalled;
   for (const [id,n] of Object.entries({headline:0,intro:1,her:2,him:3,start:state.phase==='idle'?4:25,scope:5,install:installed?28:6,sound:sound?8:7,helptext:26,close:27})) $(id).textContent = label(n);
   $('install').disabled = Boolean(installed);
   $('sound').setAttribute('aria-pressed',sound);
   for (const profile of Object.keys(packs)) $(profile).setAttribute('aria-pressed',profile === state.profile);
-  setMatrix(state.phase === 'idle' ? 0 : 1);
+  const activeItem = ready && !reportToken && state.phase === 'play' ? deck()[state.reactions.length] : null;
+  const artifact = $('artifact');
+  $('scene').classList.toggle('playing', activeItem !== null);
+  artifact.hidden = activeItem === null;
+  setMatrix({
+    item: activeItem,
+    mood: {review:'puzzled', consent:'sorry', done:state.shared ? 'boast' : 'tired'}[state.phase],
+  });
   for (const id of ['profiles','start','scope','create-room']) $(id).hidden = Boolean(playToken || reportToken);
   $('create-room').textContent = roomText(0);
   const linkBox = $('links');
@@ -168,16 +178,6 @@ function render() {
   } else if (state.phase === 'play') {
     const id = deck()[state.reactions.length];
     add(game,'small',`${state.reactions.length+1} / 3`);
-    const item = add(game,'div',icons[id]);
-    item.setAttribute('aria-hidden','true');
-    item.className = 'item reveal';
-    let origin;
-    item.onpointerdown = e => { origin = [e.clientX,e.clientY]; item.setPointerCapture(e.pointerId); };
-    item.onpointercancel = () => { origin = undefined; };
-    item.onpointerup = e => {
-      if (origin && Math.abs(e.clientX-origin[0]) > 42 && Math.abs(e.clientY-origin[1]) < 35) react(e.clientX > origin[0] ? 'like' : 'no');
-      origin = undefined;
-    };
     add(game,'h3',label(29+id));
     add(game,'p',label(34+id));
     const actions = add(game,'div',''); actions.className = 'actions';
@@ -210,6 +210,21 @@ function render() {
     action(game,25,begin);
   }
 }
+const artifact = $('artifact');
+let swipeOrigin;
+artifact.onpointerdown = event => {
+  swipeOrigin = [event.clientX, event.clientY];
+  artifact.setPointerCapture(event.pointerId);
+};
+artifact.onpointercancel = () => { swipeOrigin = undefined; };
+artifact.onpointerup = event => {
+  const start = swipeOrigin;
+  swipeOrigin = undefined;
+  if (!start) return;
+  const dx = event.clientX - start[0];
+  if (Math.abs(dx) > 42 && Math.abs(event.clientY - start[1]) < 35) react(dx > 0 ? 'like' : 'no');
+};
+
 for (const profile of Object.keys(packs)) $(profile).onclick = () => {
   if (pending || state.profile === profile) return;
   links = undefined;

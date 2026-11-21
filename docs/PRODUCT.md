@@ -8,7 +8,7 @@
 
 ## Spike A
 
-- Hai pack dữ liệu mẫu, mỗi lượt chơi gồm 2 món thật và 1 troll. Dùng sticker 2D, mascot hai trạng thái, kịch bản định sẵn và tái dùng hiệu ứng Matrix sau khi xác minh source.
+- Hai pack dữ liệu mẫu, mỗi lượt chơi gồm 2 món thật và 1 troll. GuBot, quà và hiệu ứng phản ứng dùng chung lưới Binary Matrix. GuBot dùng thoại định sẵn và đổi dáng miệng theo lượt chơi.
 - Mobile-first. Người chơi có Thích, Không hợp, Bỏ qua, Undo và nút thay cho swipe. Âm thanh tắt mặc định, có reduced motion và giữ tiến độ lúc reload.
 - Review cho xác nhận 0–3 hướng quà thật. Report chỉ chứa các hướng đã được xác nhận sau khi người nhận đồng ý chia sẻ. Với 0 hướng đã chia sẻ, report hiển thị chưa có tín hiệu đủ rõ. Đây là quy ước chuẩn hóa cho Spike A, giải quyết khác biệt với v1.1 từng đề xuất thêm nhóm Không hợp/Bỏ qua.
 - Link sender và receiver có quyền riêng, được kiểm tra phía server. Receiver không được đọc report hay ngân sách. Sender chưa có consent không đọc được kết quả. Nếu share thành công, Report v0 minh họa món cụ thể và mẹo chọn. Catalog, version và seed được giữ ổn định theo phòng.

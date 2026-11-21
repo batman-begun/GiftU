@@ -1,20 +1,23 @@
 # Bàn giao hiện tại
 
-**22/11/2026 · Spike A v0.2.0** · [Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/). Sites version 2 đã publish, source Sites `d25de5c6bb4b5972ec872dab9f0b2080718e9796`. Bản trước để rollback là Sites version 1.
+**22/11/2026 · Spike A v0.3.0** · [Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/). Sites version 3 đã publish, source Sites `419d11ba2b0463f58da9845459212c254a10e629`. Bản rollback là Sites version 2.
 
 ## Đã làm
 
-- Đưa giao diện Matrix, GuBot, ba ngôn ngữ và tài sản PWA vào `sites/`. Có demo lưu trên thiết bị và luồng phòng chia sẻ qua hai link riêng.
-- Worker + D1 lưu deck, tiến độ và consent. Link bearer riêng, token hash trong storage, hết hạn sau 7 ngày. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
-- Chạy `cd sites && node build.mjs && node --test worker.test.mjs` với Node 24+. Kiểm thử Worker qua SQLite shim pass cho cả hai catalog, quyền link, reload qua API, troll và consent. Sites v2 publish thành công. Smoke test HTTPS trên live pass cả hai bộ, gồm tạo phòng, chặn link chơi đọc report, tải lại tiến độ, chặn troll, đồng ý chia sẻ và giữ riêng. POST smoke dùng Origin của chính site.
-- Node/SQLite ở repo root là spike local trước đó. Source phục vụ release nằm trong `sites/`.
+- Bản live có ba ngôn ngữ, PWA, demo lưu trên thiết bị và phòng chia sẻ với link chơi và link report riêng. Worker + D1 lưu deck, tiến độ và consent. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
+- GuBot, năm vật phẩm của Spike A, hiệu ứng hiện hình, phản ứng và sóng chạm dùng cùng lưới `0`/`1` trên nền trắng ngà. Thân kem dựa theo [mockup đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png). Miệng được chọn ô riêng, đổi dáng tự tin, khoe khoang, xin lỗi, ngu ngơ và kiệt sức. Có hỗ trợ giảm chuyển động.
+- Source phát hành nằm trong `sites/`. Logic chọn ô và mask nằm trong `sites/web/matrix-art.js`. Renderer `sites/web/matrix.js` vẽ glyph lên canvas. Luồng chơi trong `sites/web/app.js` truyền trạng thái và phản ứng. Node/SQLite ở repo root là spike local trước đó.
+
+## Kiểm chứng
+
+- Node 24, chạy `cd sites && node build.mjs && node --test matrix.test.mjs worker.test.mjs`. 4/4 pass. Có kiểm vị trí và loại glyph khi vẽ mô phỏng màn hình hẹp, hình học của năm món và năm dáng miệng, và quyền truy cập/consent qua SQLite shim.
+- Đã mở v0.3.0 trên Chrome desktop, nhìn thấy GuBot và món troll bằng số. Chơi hết ba lượt demo Cho chàng. Like món troll và cà phê, từ chối vé, chỉ cà phê xuất hiện ở review. Shared API đã smoke qua HTTPS ở v0.2.0; Worker giữ nguyên từ bản đó.
+- Android thật, swipe và cài PWA/offline chưa UAT. Preview cục bộ cho Worker này thiếu cấu hình dev, kiểm UI thực hiện trên bản đã publish.
 
 ## Việc tiếp theo
 
-1. UAT trên Android bằng hai thiết bị hoặc hai cửa sổ riêng. Tạo phòng, chuyển link chơi, tải lại giữa lượt, đồng ý hoặc từ chối, rồi kiểm link report. Kiểm PWA install/offline, swipe, âm thanh và chuyển ngôn ngữ.
-2. Bổ sung Report v0 chi tiết. Bản live chỉ hiện hướng đã chọn, chưa có gợi ý mua/mẹo và chưa có nhánh 1A. Age/budget, nội dung catalog thật, rate limit tạo phòng và chính sách replay còn mở.
-3. Tìm source Matrix Gate D nếu cần nâng hiệu ứng. Khi release tiếp, giữ origin hiện tại và ghi Sites version, SHA, kiểm chứng live và bản rollback trong file này.
+1. UAT Android bản v0.3.0. Kiểm silhouette khi thu nhỏ, nét miệng khi đổi pose, swipe/scroll, PWA và luồng hai link trên hai thiết bị.
+2. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hiện live chỉ hiện các hướng đã chọn. Tuổi/ngân sách, catalog đầy đủ, rate limit tạo phòng và replay còn mở.
+3. Khi phát hành tiếp, giữ origin hiện tại. Ghi bản mới, source SHA, kiểm chứng live và bản rollback trong file này.
 
-**GuBot art direction.** Chủ dự án đã duyệt [mockup baseline GuBot](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png). Xem [index GuBot](../assets/mockups/gubot/README.md) để biết phiên bản và mục tiêu thiết kế. Mọi vật thể trong cảnh, kể cả miệng và phần kem tan, được kết xuất chỉ bằng chữ số. Miệng sắc nhờ cụm ô tương phản và có pose riêng. Xem Quy tắc hình ảnh Binary Matrix trong PRODUCT.md. Khi triển khai, áp dụng quy tắc này cho các visual trong cảnh live và kiểm tra từng frame trên Android. Bước này cập nhật hướng thiết kế, chưa phát hành renderer.
-
-**Cấu trúc asset.** [Index và quy ước](../assets/README.md) chỉ đường tới mockup, asset mẫu và source tài sản chạy trên Sites. Bước này lưu bản gốc đã duyệt và bàn giao vị trí asset. Renderer live vẫn chờ triển khai.
+Xem [quy ước asset](../assets/README.md) để lưu mockup, asset mẫu và asset chạy trên Sites.
