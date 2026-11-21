@@ -1,45 +1,30 @@
 # Bàn giao hiện tại
 
-**22/11/2026 · Spike A v0.3.0** · [Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/). Sites version 3 đã publish, source Sites `419d11ba2b0463f58da9845459212c254a10e629`. Bản rollback là Sites version 2.
+**22/11/2026 · Spike A v0.4.0 · Sites version 4** · [Mở GiftU Live Testbed](https://giftu.batmanbegun.chatgpt.site/).
 
-## Ứng viên v0.4.0 · Matrix toàn màn hình
+| Mốc | Nguồn |
+| --- | --- |
+| GitHub, [PR #1](https://github.com/batman-begun/GiftU/pull/1) đã merge | `ca33c730ed6b03ed7f945fef17fe733c5726988d` |
+| Source deploy trên Sites | `6e0db2668f78f9eb36900c7aa8f2c3a89afab0db` |
+| Rollback | Sites version 3 · v0.3.0 · `419d11ba2b0463f58da9845459212c254a10e629` |
 
-- Nhánh `codex/fullscreen-matrix` dùng một canvas phủ viewport từ entry tới kết quả. GuBot và quà vẫn tụ từ lưới số, nét miệng có thêm khoảng thoáng quanh glyph. Chạm nền tạo sóng. Vuốt trên món quà đi qua trình xử lý phản ứng. Màn đọc giảm chuyển động và tương phản glyph dưới chữ.
-- Màn mở có Chơi thử và Tạo link mời chơi. Catalog nằm trong setup. Về trang mở qua chữ GiftU có thể tiếp tục demo đang dở. Link nhận và link kết quả vẫn riêng. Review, xin phép và kết quả là ba màn riêng. Worker và D1 dùng lại bản trước.
-- Build và test bằng `cd sites && node build.mjs && node --test matrix.test.mjs worker.test.mjs` (4/4 pass trên Node 24). Có thể chạy `python3 -m http.server 4173 --directory sites/web` từ root để duyệt demo; luồng hai link cần Worker.
-- Preview Chrome với Worker qua SQLite shim: kiểm bố cục desktop, canvas và nút lúc chơi ở 320×568, 390×844, 430×860 và landscape 667×375. Đã đổi ngôn ngữ, kiểm Hoàn tác và tiếp tục demo, tạo phòng Cho chàng, reload giữa lượt, bật/tắt lựa chọn trong review, chia sẻ và tải report. Report chờ consent và chỉ có cà phê, dù người nhận thích cả món troll.
-- SlopLint tại pin `04977e15f3dfd6ee4b74c887dac3eb52665d6c92` sạch ở lớp tĩnh. Lớp render thiếu Puppeteer. Chưa UAT Android thật, swipe cảm ứng, giảm chuyển động theo cài đặt hệ điều hành, hiệu năng và PWA install/offline.
+## Đã triển khai
 
-**Tiếp theo** là duyệt bố cục và test Android ứng viên v0.4.0, sau đó chốt phát hành Spike A trước khi làm Report v0 và nối sang nhánh 1A.
-
-### UAT bổ sung · GuBot, vật phẩm và âm thanh
-
-- GuBot giữ thân và miệng bằng glyph. Bản ứng viên tăng tỉ lệ nhân vật, tương phản và độ dày nét miệng.
-- Mỗi lượt mới xé lưới số thành hai mép để lộ một trong năm vật phẩm clay SVG 2.5D. Khi giảm chuyển động, vật phẩm hiện tĩnh. SVG và module âm thanh có trong cache PWA.
-- Nút âm thanh có từ màn mở. Người dùng bật bằng cử chỉ rồi mới nghe tiếng xé và tiếng cảm thán tổng hợp của GuBot khi Thích, Không hợp hoặc Bỏ qua.
-- Build và 5/5 test Sites pass. Preview Chrome 320–430 px render vật phẩm SVG. Ở 390 px đã bật âm thanh, thử cả ba phản ứng và vào review. Cần nghe trực tiếp trên thiết bị để duyệt âm lượng, âm sắc và timing.
-- Bản live vẫn là v0.3.0. Trước khi phát hành cần xử lý hash mở link có cả hai vai trò và link rỗng, rồi UAT Android về độ rõ nét miệng/vật phẩm, độ mượt cú xé và âm thanh.
-
-## Đã làm
-
-- Bản live có ba ngôn ngữ, PWA, demo lưu trên thiết bị và phòng chia sẻ với link chơi và link report riêng. Worker + D1 lưu deck, tiến độ và consent. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
-- GuBot, năm vật phẩm của Spike A, hiệu ứng hiện hình, phản ứng và sóng chạm dùng cùng lưới `0`/`1` trên nền trắng ngà. Thân kem dựa theo [mockup đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png). Miệng được chọn ô riêng, đổi dáng tự tin, khoe khoang, xin lỗi, ngu ngơ và kiệt sức. Có hỗ trợ giảm chuyển động.
-- Source phát hành nằm trong `sites/`. Logic chọn ô và mask nằm trong `sites/web/matrix-art.js`. Renderer `sites/web/matrix.js` vẽ glyph lên canvas. Luồng chơi trong `sites/web/app.js` truyền trạng thái và phản ứng. Node/SQLite của spike trước nằm trong `prototypes/node-spike/`.
+- Matrix phủ viewport, giảm chuyển động và mật độ glyph dưới nội dung đọc. GuBot và nét miệng dùng `0`/`1`. Mỗi lượt xé lưới số để hé một trong năm vật phẩm clay SVG 2.5D.
+- Nút Âm thanh có từ màn mở, mặc định tắt. Khi bật, có tiếng xé và tiếng cảm thán ngắn cho ba phản ứng. SVG và module âm thanh nằm trong cache PWA `giftu-shell-0.4.0-clay`.
+- Demo lưu trên thiết bị. Setup tạo link chơi và link kết quả riêng. Người nhận review, quyết định chia sẻ và tải lại để tiếp tục. Worker + D1 duy trì quyền link và chỉ gửi các lựa chọn thật đã được chia sẻ.
 
 ## Kiểm chứng
 
-- Node 24, chạy `cd sites && node build.mjs && node --test matrix.test.mjs worker.test.mjs`. 4/4 pass. Có kiểm vị trí và loại glyph khi vẽ mô phỏng màn hình hẹp, hình học của năm món và năm dáng miệng, và quyền truy cập/consent qua SQLite shim.
-- Đã mở v0.3.0 trên Chrome desktop, nhìn thấy GuBot và món troll bằng số. Chơi hết ba lượt demo Cho chàng. Like món troll và cà phê, từ chối vé, chỉ cà phê xuất hiện ở review. Shared API đã smoke qua HTTPS ở v0.2.0; Worker giữ nguyên từ bản đó.
-- Android thật, swipe và cài PWA/offline chưa UAT. Preview cục bộ cho Worker này thiếu cấu hình dev, kiểm UI thực hiện trên bản đã publish.
+- `npm test` trên SHA GitHub và build/test trên checkout Sites đều pass 5/5 trên Node 24.
+- Chrome 320–430 CSS px đã render vật phẩm SVG. Ở 390 px đã bật nút âm thanh, thử ba phản ứng và đến review. UAT âm sắc, timing, swipe, reduced motion và PWA install/offline còn chờ Android thật.
 
-## Sau khi duyệt UI
+- Smoke HTTPS trên live: 8 asset khớp byte với SHA GitHub, SVG đúng MIME, tạo phòng Cho chàng, tải lại tiến độ, đồng ý chia sẻ và đọc report đều pass. Chrome live mở được món clay và bật được nút âm thanh.
 
-1. Khi phát hành, giữ origin hiện tại. Ghi bản mới, source SHA, kiểm chứng live và bản rollback trong file này.
-2. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hiện live chỉ hiện các hướng đã chọn. Tuổi/ngân sách, catalog đầy đủ, rate limit tạo phòng và replay còn mở.
+## Việc tiếp theo
 
-Xem [quy ước asset](../assets/README.md) để lưu mockup, asset mẫu và asset chạy trên Sites.
+1. UAT v0.4.0 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
+2. Xử lý hash có cả `play` và `report`, link token rỗng rơi về demo và phân biệt link lỗi với mạng lỗi.
+3. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hạn mức tạo phòng, catalog mở rộng và replay còn mở.
 
-
-## Bắt đầu từ bản checkout mới
-
-Chạy `npm run dev` ở root để dùng bản Sites cục bộ với hai link và database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike cũ. Cả hai suite đã pass trên Node 24 (4/4 và 3/3). Tiếp tục ứng viên UI ở [PR #1](https://github.com/batman-begun/GiftU/pull/1).
+Chạy `npm run dev` từ root để thử Worker với database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike Node cũ trong `prototypes/node-spike/`. Xem [quy ước asset](../assets/README.md) và [quy trình release](RELEASE.md).

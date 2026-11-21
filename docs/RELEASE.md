@@ -2,7 +2,7 @@
 
 Codex phụ trách review cuối, merge vào main và publish GiftU bằng ChatGPT Sites. Mọi agent có quyền repo có thể đóng góp code, test, tài liệu và chuẩn bị bản release. GitHub giữ source và lịch sử, Sites giữ phiên bản triển khai.
 
-Trước khi publish, Codex chọn commit ứng viên, xác minh cấu hình, tạo preview và kiểm thử các luồng thật từ preview. Kiểm tra Android, quyền riêng giữa sender và receiver, consent và các chức năng thuộc phạm vi release. Sau khi publish, kiểm tra live rồi ghi URL, commit SHA, phiên bản Sites, kết quả smoke test và phiên bản có thể rollback trong HANDOFF. Giữ cấu hình nhạy cảm trong môi trường triển khai.
+Trong giai đoạn phát triển, URL live là testbed để chủ dự án duyệt giao diện và thao tác trên thiết bị thật. Khi đưa bản lên để UAT, kiểm thử bản ứng viên trước, giữ URL hiện tại và ghi rõ phần nào còn chờ UAT. Sau khi publish, kiểm tra live và ghi URL, SHA GitHub, SHA Sites, phiên bản triển khai, kết quả smoke test và phiên bản rollback trong HANDOFF. Giữ cấu hình nhạy cảm trong môi trường triển khai.
 
 ## Tạo bản ứng viên
 

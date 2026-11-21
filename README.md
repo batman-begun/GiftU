@@ -2,7 +2,7 @@
 
 GiftU giúp người tặng chọn quà và trao quà qua một cuộc săn kho báu trong Binary Matrix. Nhánh **1A** dành cho người đã có quà. Nhánh **1B** dùng GuBot để khám phá gu người nhận rồi dẫn người tặng về 1A sau khi mua quà.
 
-**[Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/)** · [Trạng thái bản live và việc tiếp theo](docs/HANDOFF.md) · [PR #1 — ứng viên v0.4.0](https://github.com/batman-begun/GiftU/pull/1)
+**[Mở GiftU Live Testbed](https://giftu.batmanbegun.chatgpt.site/)** · [Bản live và việc tiếp theo](docs/HANDOFF.md) · [PR #1 — Spike A v0.4.0](https://github.com/batman-begun/GiftU/pull/1)
 
 ## Chạy từ repo root
 
