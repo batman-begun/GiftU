@@ -1,19 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { DatabaseSync } from 'node:sqlite';
-import { readFileSync } from 'node:fs';
 import worker from './dist/server/index.js';
+import { createLocalDatabase } from './local/database.mjs';
 
-test('shared room works across independent clients and enforces consent', async () => {
-  const sql = new DatabaseSync(':memory:');
-  sql.exec(readFileSync('drizzle/0000_rooms.sql','utf8'));
-  const DB = {
-    prepare: query => ({ bind: (...args) => ({
-      first: () => sql.prepare(query).get(...args),
-      run: () => ({meta:sql.prepare(query).run(...args)}),
-    }) }),
-    batch: statements => statements.map(statement => statement.run()),
-  };
+test('shared room works across independent clients and enforces consent', async t => {
+  const DB = createLocalDatabase();
+  t.after(() => DB.close());
   async function call(path, token, data) {
     const headers = token ? {Authorization:'Bearer '+token} : {};
     const response = await worker.fetch(new Request('https://giftu.test/api/'+path,{
@@ -36,5 +28,4 @@ test('shared room works across independent clients and enforces consent', async 
     assert.equal((await call('finish',receiver,{index:3,approved,ids:approved?[id]:[]}))[0],200);
     assert.deepEqual((await call('report',sender))[1],approved?{status:'shared',ids:[id]}:{status:'unavailable'});
   }
-  sql.close();
 });

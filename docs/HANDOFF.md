@@ -6,7 +6,7 @@
 
 - Bản live có ba ngôn ngữ, PWA, demo lưu trên thiết bị và phòng chia sẻ với link chơi và link report riêng. Worker + D1 lưu deck, tiến độ và consent. Report chỉ trả về các hướng thật đã xác nhận và chia sẻ.
 - GuBot, năm vật phẩm của Spike A, hiệu ứng hiện hình, phản ứng và sóng chạm dùng cùng lưới `0`/`1` trên nền trắng ngà. Thân kem dựa theo [mockup đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png). Miệng được chọn ô riêng, đổi dáng tự tin, khoe khoang, xin lỗi, ngu ngơ và kiệt sức. Có hỗ trợ giảm chuyển động.
-- Source phát hành nằm trong `sites/`. Logic chọn ô và mask nằm trong `sites/web/matrix-art.js`. Renderer `sites/web/matrix.js` vẽ glyph lên canvas. Luồng chơi trong `sites/web/app.js` truyền trạng thái và phản ứng. Node/SQLite ở repo root là spike local trước đó.
+- Source phát hành nằm trong `sites/`. Logic chọn ô và mask nằm trong `sites/web/matrix-art.js`. Renderer `sites/web/matrix.js` vẽ glyph lên canvas. Luồng chơi trong `sites/web/app.js` truyền trạng thái và phản ứng. Node/SQLite của spike trước nằm trong `prototypes/node-spike/`.
 
 ## Kiểm chứng
 
@@ -21,3 +21,8 @@
 3. Khi phát hành tiếp, giữ origin hiện tại. Ghi bản mới, source SHA, kiểm chứng live và bản rollback trong file này.
 
 Xem [quy ước asset](../assets/README.md) để lưu mockup, asset mẫu và asset chạy trên Sites.
+
+
+## Bắt đầu từ bản checkout mới
+
+Chạy `npm run dev` ở root để dùng bản Sites cục bộ với hai link và database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike cũ. Cả hai suite đã pass trên Node 24 (4/4 và 3/3). Tiếp tục ứng viên UI ở [PR #1](https://github.com/batman-begun/GiftU/pull/1).

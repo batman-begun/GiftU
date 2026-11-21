@@ -4,8 +4,8 @@ Codex phụ trách review cuối, merge vào main và publish GiftU bằng ChatG
 
 Trước khi publish, Codex chọn commit ứng viên, xác minh cấu hình, tạo preview và kiểm thử các luồng thật từ preview. Kiểm tra Android, quyền riêng giữa sender và receiver, consent và các chức năng thuộc phạm vi release. Sau khi publish, kiểm tra live rồi ghi URL, commit SHA, phiên bản Sites, kết quả smoke test và phiên bản có thể rollback trong HANDOFF. Giữ cấu hình nhạy cảm trong môi trường triển khai.
 
-## Bản đang chạy
+## Tạo bản ứng viên
 
-- [GiftU live](https://giftu.batmanbegun.chatgpt.site/) · public, v0.1.0 (Sites version 1). Dùng cùng URL cho từng bản review và cho production.
-- Commit nguồn triển khai trên Sites `c7d686d5330c5b1398eb0669e694af548f8b8902`. Đây là snapshot frontend chạy độc lập. Backend hiện ở GitHub và chạy local. Đưa giao diện live về GitHub và chuẩn hóa đường phát hành từ commit đã review ở lần tích hợp tiếp theo.
-- Đã kiểm trên live luồng GuBot, lọc món troll và đổi cả ba ngôn ngữ. Đây là bản Sites đầu tiên, chưa có bản trước để rollback.
+- Từ root chạy `npm test`, rồi `npm run dev` để kiểm Worker và luồng hai link tại máy.
+- Source phát hành nằm trong `sites/`. Build tạo `sites/dist/server/`. Giữ binding D1 `DB` và các migration trong `sites/drizzle/` khi chuẩn bị gói. Dùng project GiftU hiện có và giữ origin live.
+- Xem [bàn giao](HANDOFF.md) để biết phiên bản live, SHA triển khai, bản rollback và phần kiểm còn mở.
