@@ -18,8 +18,10 @@
 
 Tier 1 hướng tới 8 món thật + 2 troll, report đủ nội dung và đường quay về 1A. Chờ chốt catalog nam, mapping tuổi hai bộ, mức ngân sách, nội dung report, mascot và joke, luật hunt 1A, stack, vòng đời phòng và kế hoạch Noel. Marketplace, giao dịch và AI suy luận gu là hướng sau MVP. Xem [lịch sử](HISTORY.md) để đọc các bản đầy đủ.
 
-## Tạo hình và animation GuBot
+## Quy tắc hình ảnh Binary Matrix
 
-- GuBot là kem ốc quế tan lệch một bên, tụ từ cùng lưới số 0/1 đa sắc trên nền trắng ngà. Rìa silhouette chuyển dần về mật độ và màu của nền. Mắt nheo ước lệ.
-- **Miệng là kênh biểu cảm chính.** Biên miệng sắc, đọc được ở kích thước nhỏ, có thể rõ như một nét vẽ. Quy tắc làm mềm rìa áp dụng cho silhouette bên ngoài.
-- Khi triển khai, tách pose và timing của miệng khỏi hình thân để đổi độ cong, độ mở và độ lệch độc lập. Duy trì điểm neo theo mặt khi thân biến dạng. Pose mặc định tự tin, nhiệt huyết. Các pose khác bao gồm khoe khoang, xin lỗi, ngu ngơ và kiệt sức.
+- Chỉ số `0` và `1` tạo hình mọi thành phần trực quan trong cảnh Matrix, gồm GuBot, mắt, miệng, giọt kem, vật phẩm và hiệu ứng. Mỗi ô có tối đa một số màu phẳng hoặc để trống. Nền trắng ngà giữ màu phẳng xuyên suốt. Không vẽ gradient phủ nền, mảng màu, đường viền, stroke, glow, sprite hoặc hình đệm giữa các số. Hình học nội bộ có thể chọn ô nhưng không được vẽ ra cảnh.
+- GuBot là kem ốc quế tan lệch một bên và tụ từ cùng lưới số với vùng nền. Khi đi qua rìa silhouette, thay đổi dần tỷ lệ ô có số và cách chọn màu từng số. Giữ nét của từng số rõ. Mắt nheo ước lệ bằng mật độ ô.
+- **Miệng là kênh biểu cảm chính.** Miệng đọc sắc như một nét vẽ nhờ một dải ô số tương phản cao. Từng ô trong miệng vẫn là số, với khoảng trắng ngà giữa ký tự. Không viền hay vẽ nét liền đè lên lưới.
+- Tách pose và timing của miệng khỏi thân để thay đổi độ cong, độ mở và độ lệch. Miệng neo theo mặt khi thân biến dạng. Mỗi frame kết xuất pose thành tập ô số trên cùng lưới. Pose mặc định tự tin, nhiệt huyết. Các pose khác gồm khoe khoang, xin lỗi, ngu ngơ và kiệt sức.
+- Kiểm bằng cách phóng to miệng, rìa và giọt rơi. Ngoài nét glyph, toàn bộ vùng cảnh phải là nền trắng ngà. Kiểm cả lúc đổi pose và chạy hiệu ứng.

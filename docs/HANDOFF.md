@@ -15,4 +15,4 @@
 2. Bổ sung Report v0 chi tiết. Bản live chỉ hiện hướng đã chọn, chưa có gợi ý mua/mẹo và chưa có nhánh 1A. Age/budget, nội dung catalog thật, rate limit tạo phòng và chính sách replay còn mở.
 3. Tìm source Matrix Gate D nếu cần nâng hiệu ứng. Khi release tiếp, giữ origin hiện tại và ghi Sites version, SHA, kiểm chứng live và bản rollback trong file này.
 
-**GuBot art direction.** Chủ dự án duyệt silhouette Binary Matrix rìa mềm và yêu cầu miệng sắc làm kênh biểu cảm chính. Xem mục Tạo hình và animation trong PRODUCT.md trước khi implement. Đây là quyết định thiết kế, animation live còn chờ triển khai.
+**GuBot art direction.** Mockup mới kiểm chứng lưới 0/1 với nền trắng ngà phẳng. Mọi vật thể trong cảnh, kể cả miệng và phần kem tan, được kết xuất chỉ bằng chữ số. Miệng sắc nhờ cụm ô tương phản và có pose riêng. Xem Quy tắc hình ảnh Binary Matrix trong PRODUCT.md. Khi triển khai, áp dụng quy tắc này cho các visual trong cảnh live và kiểm tra từng frame trên Android. Bước này cập nhật hướng thiết kế, chưa phát hành renderer.
