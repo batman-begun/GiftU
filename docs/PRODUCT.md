@@ -20,6 +20,8 @@ Tier 1 hướng tới 8 món thật + 2 troll, report đủ nội dung và đư�
 
 ## Quy tắc hình ảnh Binary Matrix
 
+- Toàn viewport là một trường Matrix liên tục, kể cả dưới header và điều khiển. Giảm tương phản glyph ngay dưới chữ. Phản ứng vuốt thuộc vùng vật phẩm và chạm nền tạo sóng. Các màn review, xin phép và đọc kết quả ưu tiên chữ, giảm chuyển động.
+- Ứng viên v0.4.0 đang chờ duyệt bố cục. Màn mở đưa thẳng vào demo hoặc setup phòng. Catalog xuất hiện trong setup. Màn người nhận từ link mời chỉ có thao tác bắt đầu chơi.
 - Chỉ số `0` và `1` tạo hình mọi thành phần trực quan trong cảnh Matrix, gồm GuBot, mắt, miệng, giọt kem, vật phẩm và hiệu ứng. Mỗi ô có tối đa một số màu phẳng hoặc để trống. Nền trắng ngà giữ màu phẳng xuyên suốt. Không vẽ gradient phủ nền, mảng màu, đường viền, stroke, glow, sprite hoặc hình đệm giữa các số. Hình học nội bộ có thể chọn ô nhưng không được vẽ ra cảnh.
 - GuBot là kem ốc quế tan lệch một bên và tụ từ cùng lưới số với vùng nền. Khi đi qua rìa silhouette, thay đổi dần tỷ lệ ô có số và cách chọn màu từng số. Giữ nét của từng số rõ. Mắt nheo ước lệ bằng mật độ ô.
 - **Miệng là kênh biểu cảm chính.** Miệng đọc sắc như một nét vẽ nhờ một dải ô số tương phản cao. Từng ô trong miệng vẫn là số, với khoảng trắng ngà giữa ký tự. Không viền hay vẽ nét liền đè lên lưới.
