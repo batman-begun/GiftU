@@ -10,4 +10,4 @@ GiftU giúp người tặng chọn quà và trao quà qua một cuộc săn kho 
 4. [Lịch sử hình thành](docs/HISTORY.md) — ý tưởng khởi nguồn, các bản memo và spec.
 5. [Triển khai](docs/RELEASE.md) — quy trình ChatGPT Sites do Codex phụ trách.
 
-Trạng thái hiện tại là **pre-code**. Repo này là nguồn bàn giao giữa các môi trường và agent.
+Trạng thái hiện tại là **Spike A chạy local**. Dùng Node.js 24+, chạy `npm start` rồi mở `http://localhost:3000`. Chạy `npm test` để kiểm tra luồng API. Repo này là nguồn bàn giao giữa các môi trường và agent.
