@@ -14,3 +14,7 @@
 - Nếu sắp hết phiên hoặc chạm quota, ưu tiên đẩy checkpoint có thể đọc và tiếp tục. Dùng nhánh làm việc cho WIP, ghi cách tái hiện phần dở và đưa link nhánh hoặc SHA. Giữ main ở trạng thái bàn giao được. Khi dùng PR, giữ thông tin bàn giao trong cả commit được merge.
 - Mọi agent có quyền repo đều có thể commit. Đồng bộ trước khi push, giữ thay đổi của người khác và tránh ghi đè lịch sử. Không commit secret, token thật, link receiver thật, dữ liệu người chơi hoặc media riêng tư.
 - Codex phụ trách deploy qua ChatGPT Sites. Commit, push và merge không tự publish production.
+
+## Mockup và asset
+
+Đọc [quy ước asset](assets/README.md) trước khi thêm hình, âm thanh, video, file thiết kế hoặc dữ liệu mẫu. Cập nhật index tương ứng trong cùng commit. Khi chủ dự án duyệt một phiên bản, đánh dấu bản đó là baseline và giữ nguyên file. Asset chạy trên site đi theo source hoặc cấu hình deploy trong `sites/`.

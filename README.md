@@ -10,6 +10,7 @@ GiftU giúp người tặng chọn quà và trao quà qua một cuộc săn kho 
 2. [Spec hiện hành](docs/PRODUCT.md) — luồng, quyết định, phạm vi Spike A.
 3. [Bàn giao hiện tại](docs/HANDOFF.md) — trạng thái, kiểm chứng và bước tiếp theo.
 4. [Lịch sử hình thành](docs/HISTORY.md) — ý tưởng khởi nguồn, các bản memo và spec.
-5. [Triển khai](docs/RELEASE.md) — quy trình ChatGPT Sites do Codex phụ trách.
+5. [Mockup và asset mẫu](assets/README.md) — thư viện thiết kế, mẫu thử và quy ước lưu file.
+6. [Triển khai](docs/RELEASE.md) — quy trình ChatGPT Sites do Codex phụ trách.
 
 Trên live, chọn một bộ quà rồi bấm **Tạo phòng chia sẻ** để lấy link chơi và link kết quả riêng. Xem [bàn giao](docs/HANDOFF.md) để biết cách test và bước tiếp theo. Source của bản live nằm trong `sites/`.

@@ -25,3 +25,5 @@ Tier 1 hướng tới 8 món thật + 2 troll, report đủ nội dung và đư�
 - **Miệng là kênh biểu cảm chính.** Miệng đọc sắc như một nét vẽ nhờ một dải ô số tương phản cao. Từng ô trong miệng vẫn là số, với khoảng trắng ngà giữa ký tự. Không viền hay vẽ nét liền đè lên lưới.
 - Tách pose và timing của miệng khỏi thân để thay đổi độ cong, độ mở và độ lệch. Miệng neo theo mặt khi thân biến dạng. Mỗi frame kết xuất pose thành tập ô số trên cùng lưới. Pose mặc định tự tin, nhiệt huyết. Các pose khác gồm khoe khoang, xin lỗi, ngu ngơ và kiệt sức.
 - Kiểm bằng cách phóng to miệng, rìa và giọt rơi. Ngoài nét glyph, toàn bộ vùng cảnh phải là nền trắng ngà. Kiểm cả lúc đổi pose và chạy hiệu ứng.
+
+- [Baseline GuBot đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png) ghi lại dáng kem, phối màu, rìa mềm và nét cười mặc định. Dùng hình để đối chiếu thiết kế khi triển khai theo quy tắc lưới ở trên.
