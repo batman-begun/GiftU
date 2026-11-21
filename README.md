@@ -2,15 +2,26 @@
 
 GiftU giúp người tặng chọn quà và trao quà qua một cuộc săn kho báu trong Binary Matrix. Nhánh **1A** dành cho người đã có quà. Nhánh **1B** dùng GuBot để khám phá gu người nhận rồi dẫn người tặng về 1A sau khi mua quà.
 
-**[Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/)** · Public Testbed v0.3.0. Dùng chính URL này để review từng build và làm production khi GiftU hoàn tất.
+**[Mở GiftU live](https://giftu.batmanbegun.chatgpt.site/)** · [Trạng thái bản live và việc tiếp theo](docs/HANDOFF.md) · [PR #1 — ứng viên v0.4.0](https://github.com/batman-begun/GiftU/pull/1)
 
-## Bắt đầu tại đây
+## Chạy từ repo root
 
-1. [AGENTS.md](AGENTS.md) — quy tắc làm việc cho mọi agent.
-2. [Spec hiện hành](docs/PRODUCT.md) — luồng, quyết định, phạm vi Spike A.
-3. [Bàn giao hiện tại](docs/HANDOFF.md) — trạng thái, kiểm chứng và bước tiếp theo.
-4. [Lịch sử hình thành](docs/HISTORY.md) — ý tưởng khởi nguồn, các bản memo và spec.
-5. [Mockup và asset mẫu](assets/README.md) — thư viện thiết kế, mẫu thử và quy ước lưu file.
-6. [Triển khai](docs/RELEASE.md) — quy trình ChatGPT Sites do Codex phụ trách.
+Cần Node.js 24+. Repo dùng thư viện có sẵn trong Node.js.
 
-Trên live, bấm **Chơi với GuBot** để thử hoạt cảnh Binary Matrix, hoặc chọn một bộ quà rồi bấm **Tạo phòng chia sẻ** để lấy link chơi và link kết quả riêng. Xem [bàn giao](docs/HANDOFF.md) để biết cách test và bước tiếp theo. Source của bản live nằm trong `sites/`.
+```sh
+npm run dev
+npm test
+```
+
+Mở [localhost:4173](http://127.0.0.1:4173). Preview chạy cùng frontend và Worker với bản phát hành, dùng SQLite trong bộ nhớ cho luồng hai link. Khởi động lại preview sẽ xóa các phòng thử. `npm test` build rồi chạy test Matrix và Worker.
+
+## Tìm đúng source
+
+| Đường dẫn | Dùng khi |
+| --- | --- |
+| [`sites/web/`](sites/web/) | Sửa UI, Matrix, chữ, âm thanh và PWA. |
+| [`sites/worker.mjs`](sites/worker.mjs), [`sites/drizzle/`](sites/drizzle/) | Sửa API phòng, link, consent và schema. |
+| [`assets/`](assets/) | Tìm mockup đã duyệt, dữ liệu và media mẫu. |
+| [`prototypes/node-spike/`](prototypes/node-spike/) | Tra cứu hoặc chạy bản thử Node/SQLite đầu tiên. |
+
+Đọc [AGENTS.md](AGENTS.md), [spec hiện hành](docs/PRODUCT.md) và [bàn giao](docs/HANDOFF.md) trước khi nhận việc. [Lịch sử](docs/HISTORY.md) giải thích các quyết định cũ. [Hướng dẫn release](docs/RELEASE.md) dành cho lần phát hành lên Sites.

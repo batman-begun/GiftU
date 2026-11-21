@@ -2,10 +2,16 @@
 
 Áp dụng cho Codex, Claude, Gemini và mọi người đóng góp. Đọc README, docs/PRODUCT.md và docs/HANDOFF.md, kiểm tra nhánh, HEAD và thay đổi đang có trước khi sửa. Đọc archive khi cần hiểu lý do hoặc nội dung chi tiết. Khi spec hiện hành thiếu chi tiết thì tham chiếu bản v1.2 rồi v1.1. Ghi rõ điểm mâu thuẫn hoặc quyết định còn mở, giữ dữ liệu giả lập có nhãn.
 
+## Bắt đầu một lượt làm việc
+
+1. Kiểm tra `git status --short --branch`, `git log -5 --oneline`, rồi xem PR đang mở. Tiếp tục nhánh tính năng nếu đã có PR cho cùng việc. Nếu mở việc độc lập, tạo nhánh từ `main` đã đồng bộ.
+2. Chạy `npm run dev` từ root để mở GiftU và luồng hai link. Chạy `npm test` để build và test bản hiện hành. Sửa UI ở `sites/web/`, backend ở `sites/worker.mjs` và migration ở `sites/drizzle/`. Bản thử cũ nằm ở `prototypes/node-spike/`.
+3. Dùng issue hoặc PR để báo phần đang sửa và tránh đụng cùng file. Khi bàn giao, ghi nhánh, SHA, cách kiểm và bước tiếp theo.
+
 ## GitHub là luồng làm việc chính
 
 - Agent đến sau phải tự tiếp tục được từ repo mà không cần đọc các thread chat. README dẫn tới mục tiêu, trạng thái, nơi kiểm chứng và việc tiếp theo. Dùng [GiftU live](https://giftu.batmanbegun.chatgpt.site/) để kiểm chứng hành vi đã publish. Ghi rõ trạng thái local/PR và live nếu hai bản khác nhau.
-- Mọi agent có quyền đều có thể commit lên nhánh làm việc và mở PR. Codex chịu trách nhiệm review cuối, merge vào main và publish lên Sites. Để PR ở trạng thái chờ Codex nếu chưa được review cuối.
+- Agent có quyền ghi đẩy nhánh lên repo. Khi chỉ có quyền đọc, dùng fork và mở PR từ fork. Codex chịu trách nhiệm review cuối, merge vào main và publish lên Sites. Để PR ở trạng thái chờ Codex nếu chưa được review cuối.
 
 ## Mỗi commit phải tự bàn giao được
 
