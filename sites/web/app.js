@@ -63,6 +63,22 @@ if (!Object.hasOwn(copy,lang)) lang = Object.keys(copy).find(code => navigator.l
 function store() { if (mode !== 'demo') return; try { localStorage.setItem(key,JSON.stringify(state)); } catch {} }
 const ui = {
   vi: {
+    purpose: "Biến việc tặng quà thành một trò chơi.",
+    rolePrompt: "Tôi là GuBot. Bạn muốn tặng quà hay được mời chơi?",
+    giver: "Tôi muốn tặng quà",
+    receiver: "Tôi được mời chơi",
+    receiverHelp: "Mở lại link người ấy gửi trong tin nhắn để vào đúng trò chơi. Bạn cũng có thể chơi thử một ván tại đây.",
+    huntHelp: "Chuẩn bị manh mối và màn bật mí, rồi gửi link để người ấy đi tìm món quà. Trò săn kho báu đang được phát triển.",
+    inviteTitle: "Rủ người ấy chơi với GuBot",
+    inviteLead: "Một ván, ba lượt đoán. Bạn tự nhắn và trò chuyện với người ấy.",
+    steps: ["Chọn bộ quà, tạo link rồi tự gửi qua tin nhắn.", "Tôi đoán ba món. Người ấy chấm từng món và chọn có chia sẻ kết quả hay không.", "Nếu họ chia sẻ, mở link kết quả riêng rồi tự quyết định tặng gì."],
+    preview: "Xem trước lời chào người nhận",
+    greetingPlay: "Cho tôi đoán gu của bạn qua ba món nhé? Đoán trật thì cứ cho món đó chìm!",
+    consentNote: "Cuối ván, bạn tự chọn có chia sẻ kết quả với người mời hay không.",
+    messageLabel: "Lời mời gửi kèm (có thể sửa)",
+    message: "Thử xem GuBot đoán gu của bạn trúng mấy món nhé!",
+    copyMessage: "Sao chép lời mời và link",
+    shareReady: "Hai link đã sẵn sàng",
     headline: 'Bạn đã có quà chưa?', intro: 'Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.', hunt: 'Đã có quà', huntDetail: 'Giấu quà bằng một cuộc săn kho báu. Đang phát triển.', guess: 'Chưa biết tặng gì', guessDetail: 'Mời người ấy chơi đoán gu.',
     start: 'Chơi thử', resume: 'Chơi tiếp', invite: 'Tạo link mời chơi', room: 'Chọn bộ quà gợi ý',
     create: 'Tạo phòng', creating: 'Đang tạo phòng…', back: 'Quay lại',
@@ -82,6 +98,22 @@ const ui = {
     copy: 'Sao chép', copied: 'Đã sao chép',
   },
   en: {
+    purpose: "Turn gift-giving into a game.",
+    rolePrompt: "I’m GuBot. Are you giving a gift, or did someone invite you to play?",
+    giver: "I want to give a gift",
+    receiver: "I was invited to play",
+    receiverHelp: "Open the invite from your messages to find the right game. You can also play a demo here.",
+    huntHelp: "Prepare a clue and a reveal, then send a link so they can hunt for the gift. Treasure hunts are in development.",
+    inviteTitle: "Invite them to play with GuBot",
+    inviteLead: "One game, three guesses. You do the messaging.",
+    steps: ["Pick a gift catalog, create the link and send it in a message.", "I guess three gifts. They rate each one and decide whether to share the result.", "If they share, open your private results link and decide what to give."],
+    preview: "Preview their welcome",
+    greetingPlay: "Can I guess your taste in three gifts? If I miss, send that gift down the drain!",
+    consentNote: "After the game, you decide whether to share your result with your host.",
+    messageLabel: "Editable message to send",
+    message: "Try GuBot and see how many gifts it guesses right!",
+    copyMessage: "Copy message and invite link",
+    shareReady: "Your two links are ready",
     hunt: 'I have a gift', huntDetail: 'Hide it in a treasure hunt. In development.', guess: 'I need a gift idea', guessDetail: 'Invite them to a taste-guessing game.', headline: 'Do you have a gift yet?', intro: 'I’m GuBot. Let’s find a gift or hide one.',
     start: 'Try it', resume: 'Resume', invite: 'Create an invite', room: 'Choose a gift catalog',
     create: 'Create room', creating: 'Creating room…', back: 'Back',
@@ -101,6 +133,22 @@ const ui = {
     copy: 'Copy', copied: 'Copied',
   },
   zh: {
+    purpose: "把送礼变成一场游戏。",
+    rolePrompt: "我是 GuBot。你想送礼物，还是有人邀请你玩？",
+    giver: "我想送礼物",
+    receiver: "我收到邀请了",
+    receiverHelp: "请打开消息里的邀请链接进入对应的游戏。你也可以在这里试玩。",
+    huntHelp: "准备线索和揭晓环节，再发链接让对方寻找礼物。寻宝游戏正在开发中。",
+    inviteTitle: "邀请对方和 GuBot 玩",
+    inviteLead: "一局猜三次，你负责发消息和聊天。",
+    steps: ["选择礼物目录，创建链接，再通过消息发送。", "我猜三件礼物，对方逐一评价，并决定是否分享结果。", "如果对方分享，打开私人结果链接，再决定送什么。"],
+    preview: "预览收礼人看到的欢迎语",
+    greetingPlay: "让我用三件礼物猜猜你喜欢什么。猜错了，就把那件礼物冲走！",
+    consentNote: "游戏结束后，你可以选择是否把结果分享给邀请人。",
+    messageLabel: "可编辑的邀请消息",
+    message: "来试试 GuBot 能猜中几件你喜欢的礼物！",
+    copyMessage: "复制邀请消息和链接",
+    shareReady: "两个链接已准备好",
     hunt: '已经有礼物', huntDetail: '用寻宝游戏藏起礼物。开发中。', guess: '还没想好送什么', guessDetail: '邀请对方玩礼物猜猜看。', headline: '你已经准备好礼物了吗？', intro: '我是 GuBot。你可以把礼物藏进寻宝游戏，或者让我帮你猜对方的喜好。',
     start: '试玩', resume: '继续游戏', invite: '创建邀请链接', room: '选择礼物目录',
     create: '创建房间', creating: '正在创建房间…', back: '返回',
@@ -122,6 +170,8 @@ const ui = {
 };
 let remoteDeck, reportData, links, remoteError, ready = mode === 'demo';
 let setupOpen = false, homeOpen = false;
+let introStep = 'home';
+let inviteDraft;
 let roomProfile = state.profile;
 const text = key => ui[lang][key];
 const deck = () => remoteDeck ?? packs[state.profile];
@@ -187,7 +237,7 @@ function transition(phase) {
   state.phase = phase;
   store();
   render();
-  focus(phase === 'idle' ? $('start') : $('game'));
+  focus(phase === 'idle' ? $('headline') : $('game'));
 }
 function resumeDemo() {
   return homeOpen && ['play', 'review', 'consent'].includes(state.phase);
@@ -244,6 +294,9 @@ function renderLinks() {
   const box = $('links');
   box.replaceChildren();
   if (!links) return;
+  const heading = add(box, 'h2', text('shareReady'));
+  heading.id = 'links-ready';
+  heading.tabIndex = -1;
   add(box, 'p', text('linkHint'));
   for (const [role, token, key] of [['play', links.receiver, 'playLink'], ['report', links.sender, 'reportLink']]) {
     const url = new URL(location.pathname + '#' + role + '=' + token, location.origin);
@@ -258,6 +311,21 @@ function renderLinks() {
     });
     copy.setAttribute('aria-label', text('copy') + ' · ' + text(key));
   }
+  const invite = new URL(location.pathname + '#play=' + links.receiver, location.origin);
+  const messageLabel = add(box, 'label', text('messageLabel'));
+  messageLabel.htmlFor = 'invite-message';
+  const editor = add(box, 'textarea', '');
+  editor.id = 'invite-message';
+  editor.rows = 2;
+  editor.value = inviteDraft ?? text('message');
+  editor.oninput = () => { inviteDraft = editor.value; };
+  const copyMessage = action(box, text('copyMessage'), async () => {
+    const message = [editor.value.trim(), invite.href].filter(Boolean).join('\n');
+    try {
+      await navigator.clipboard.writeText(message);
+      copyMessage.textContent = text('copied');
+    } catch { window.prompt(text('copyMessage'), message); }
+  });
 }
 
 function render() {
@@ -275,21 +343,34 @@ function render() {
   stage.dataset.screen = screen;
   $('install').hidden = Boolean(installed || screen === 'play');
   $('sound').hidden = screen !== 'play' && (screen !== 'entry' || Boolean(reportToken));
-  $('intro').textContent = playToken ? label('greeting') : text('intro');
-  $('headline').textContent = playToken ? text('play') : text('headline');
-  $('gift-paths').hidden = Boolean(playToken);
+  const isHome = mode === 'demo' && introStep === 'home';
+  const isGiver = mode === 'demo' && introStep === 'giver';
+  const isReceiver = mode === 'demo' && introStep === 'receiver';
+  const isHunt = mode === 'demo' && introStep === 'hunt';
+  $('headline').textContent = text(playToken ? 'play' : isHome ? 'purpose' : isGiver ? 'headline' : isReceiver ? 'receiver' : 'hunt');
+  $('intro').textContent = text(playToken ? 'greetingPlay' : isHome ? 'rolePrompt' : isGiver ? 'intro' : isReceiver ? 'receiverHelp' : 'huntHelp');
+  $('entry-roles').hidden = !isHome;
+  $('choose-giver').textContent = text('giver');
+  $('choose-receiver').textContent = text('receiver');
+  $('gift-paths').hidden = !isGiver;
   for (const key of ['hunt', 'huntDetail', 'guess', 'guessDetail']) $(key).textContent = text(key);
   $('start').textContent = playToken ? text('play') : text(resumeDemo() ? 'resume' : 'start');
-  $('start').hidden = false;
-  $('start').classList.toggle('primary', Boolean(playToken));
-  $('start').classList.toggle('quiet', !playToken);
-
-  $('open-setup').hidden = Boolean(playToken);
-  $('scope').textContent = text('scope');
-  $('scope').hidden = Boolean(playToken);
+  $('start').hidden = !(playToken || isReceiver || (isHome && resumeDemo()));
+  $('start').classList.toggle('primary', Boolean(playToken || isReceiver));
+  $('start').classList.toggle('quiet', !playToken && !isReceiver);
+  $('intro-back').hidden = isHome || Boolean(playToken);
+  $('intro-back').textContent = text('back');
+  $('scope').textContent = text(playToken ? 'consentNote' : 'scope');
+  $('scope').hidden = !(playToken || isReceiver);
   document.querySelector('.intro').hidden = screen !== 'entry';
   $('setup').hidden = screen !== 'setup';
-  $('setup-title').textContent = text('room');
+  $('setup-title').textContent = text('inviteTitle');
+  $('setup-lead').textContent = text('inviteLead');
+  $('invite-steps').replaceChildren();
+  for (const step of text('steps')) add($('invite-steps'), 'li', step);
+  $('preview-title').textContent = text('preview');
+  $('preview-greeting').textContent = text('greetingPlay');
+  $('preview-consent').textContent = text('consentNote');
   $('close-setup').textContent = text('back');
   $('create-room').textContent = text(pending && setupOpen ? 'creating' : 'create');
   for (const id of ['her', 'him', 'create-room', 'close-setup']) $(id).disabled = pending;
@@ -465,9 +546,19 @@ brand.addEventListener('click', event => {
   homeOpen = true;
   setupOpen = false;
   remoteError = false;
+  introStep = 'home';
   render();
-  focus($('start'));
+  focus($('headline'));
 });
+function goIntro(step) {
+  introStep = step;
+  render();
+  focus($('headline'));
+}
+$('choose-giver').onclick = () => goIntro('giver');
+$('choose-receiver').onclick = () => goIntro('receiver');
+$('open-hunt').onclick = () => goIntro('hunt');
+$('intro-back').onclick = () => goIntro(introStep === 'hunt' ? 'giver' : 'home');
 $('open-setup').onclick = () => {
   setupOpen = true;
   render();
@@ -503,9 +594,13 @@ $('install').onclick = async () => {
 navigator.serviceWorker?.register('./sw.js').catch(console.error);
 render();
 
-$('create-room').onclick = () => request(async () => {
-  links = await api('rooms', null, {profile:roomProfile});
-});
+$('create-room').onclick = async () => {
+  await request(async () => {
+    links = await api('rooms', null, {profile:roomProfile});
+  });
+  const readyHeading = $('links-ready');
+  if (links && readyHeading) focus(readyHeading);
+};
 function loadReport() {
   return request(async () => { reportData = await api('report', reportToken); ready = true; });
 }

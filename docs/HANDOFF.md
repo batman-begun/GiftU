@@ -33,9 +33,15 @@
 
 - Trên live v0.4.2, 7 asset kiểm tra khớp byte với nguồn đã test.
 
+## Luồng GuBot v0.4.3
+
+- Homepage giải thích mục đích rồi hỏi vai; nhánh 1B hướng dẫn trước khi tạo và sao chép link. Bên nhận có lời chào riêng và quyền chia sẻ được nói trước.
+- Node 24 pass 6/6. Chrome preview đã kiểm hai vai, điều hướng quay lại, xem trước, tạo phòng, sửa và copy lời mời chỉ kèm link chơi, mở link nhận vào thẳng game và link kết quả vào đúng màn riêng.
+- 1A hiện có lời hướng dẫn và trạng thái đang phát triển. Lát cắt một manh mối và một màn bật mí là bước tiếp theo. Report v0 để sau.
+
 ## Việc tiếp theo
 
 1. UAT v0.4.2 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
-2. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hạn mức tạo phòng, catalog mở rộng và replay còn mở.
+2. Build lát cắt 1A với một manh mối và một màn bật mí. Report v0 để sau.
 
 Chạy `npm run dev` từ root để thử Worker với database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike Node cũ trong `prototypes/node-spike/`. Xem [quy ước asset](../assets/README.md) và [quy trình release](RELEASE.md).
