@@ -1,17 +1,17 @@
 # Bàn giao hiện tại
 
-**22/11/2026 · Spike A v0.4.2 · Sites version 6** · [Mở GiftU Live Testbed](https://giftu.batmanbegun.chatgpt.site/).
+**22/11/2026 · Spike A v0.4.3 · Sites version 7** · [Mở GiftU Live Testbed](https://giftu.batmanbegun.chatgpt.site/).
 
 | Mốc | Nguồn |
 | --- | --- |
-| GitHub, [PR #3](https://github.com/batman-begun/GiftU/pull/3) | `36a096bb22774c57803199f0225eb103c23168dd` |
-| Source deploy trên Sites | `894fdb0f4846ac36fea3232ea33f450b88d83e54` |
-| Rollback | Sites version 5 · v0.4.1 · `e1fcabf8702d76561104d6f6da5d78fb9190ffcc` |
+| GitHub, [PR #4](https://github.com/batman-begun/GiftU/pull/4) | `c9396a26da05b475a315d731ea6fdffd2f4c7a6b` |
+| Source deploy trên Sites | `ce367fce508b2ffacd39ea38008774cc3f623bf3` |
+| Rollback | Sites version 6 · v0.4.2 · `894fdb0f4846ac36fea3232ea33f450b88d83e54` |
 
 ## Đã triển khai
 
 - Matrix phủ viewport, giảm chuyển động và mật độ glyph dưới nội dung đọc. GuBot và nét miệng dùng `0`/`1`. Mỗi lượt xé lưới số để hé một trong năm vật phẩm clay SVG 2.5D.
-- Nút Âm thanh có từ màn mở, mặc định tắt. Khi bật, có tiếng xé, tiếng chúc mừng khi thích, tiếng xả khi không hợp, và tiếng cảm thán khi bỏ qua. SVG và module âm thanh nằm trong cache PWA `giftu-shell-0.4.2`.
+- Nút Âm thanh có từ màn mở, mặc định tắt. Khi bật, có tiếng xé, tiếng chúc mừng khi thích, tiếng xả khi không hợp, và tiếng cảm thán khi bỏ qua. SVG và module âm thanh nằm trong cache PWA `giftu-shell-0.4.3`.
 - Demo lưu trên thiết bị. Setup tạo link chơi và link kết quả riêng. Người nhận review, quyết định chia sẻ và tải lại để tiếp tục. Worker + D1 duy trì quyền link và chỉ gửi các lựa chọn thật đã được chia sẻ.
 
 ## Kiểm chứng
@@ -39,9 +39,11 @@
 - Node 24 pass 6/6. Chrome preview đã kiểm hai vai, điều hướng quay lại, xem trước, tạo phòng, sửa và copy lời mời chỉ kèm link chơi, mở link nhận vào thẳng game và link kết quả vào đúng màn riêng.
 - 1A hiện có lời hướng dẫn và trạng thái đang phát triển. Lát cắt một manh mối và một màn bật mí là bước tiếp theo. Report v0 để sau.
 
+- Live v0.4.3 đã publish và 9 asset kiểm tra khớp byte với nguồn đã test.
+
 ## Việc tiếp theo
 
-1. UAT v0.4.2 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
+1. UAT v0.4.3 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
 2. Build lát cắt 1A với một manh mối và một màn bật mí. Report v0 để sau.
 
 Chạy `npm run dev` từ root để thử Worker với database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike Node cũ trong `prototypes/node-spike/`. Xem [quy ước asset](../assets/README.md) và [quy trình release](RELEASE.md).
