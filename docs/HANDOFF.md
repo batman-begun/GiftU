@@ -21,10 +21,13 @@
 
 - Smoke HTTPS trên live: 8 asset khớp byte với SHA GitHub, SVG đúng MIME, tạo phòng Cho chàng, tải lại tiến độ, đồng ý chia sẻ và đọc report đều pass. Chrome live mở được món clay và bật được nút âm thanh.
 
+## Bản vá link v0.4.1
+
+- Chặn link thiếu mã, sai định dạng, trùng tham số hoặc chứa cả hai vai trò. Link sai hoặc hết hạn có hướng thoát, lỗi mạng lúc mở phòng có nút thử lại. Quyền link và consent vẫn do Worker xử lý.
+
 ## Việc tiếp theo
 
 1. UAT v0.4.0 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
-2. Xử lý hash có cả `play` và `report`, link token rỗng rơi về demo và phân biệt link lỗi với mạng lỗi.
-3. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hạn mức tạo phòng, catalog mở rộng và replay còn mở.
+2. Hoàn thiện Report v0 với gợi ý mua và mẹo cụ thể, rồi nối sang nhánh săn kho báu 1A. Hạn mức tạo phòng, catalog mở rộng và replay còn mở.
 
 Chạy `npm run dev` từ root để thử Worker với database mẫu trong bộ nhớ. `npm test` kiểm bản Sites, `npm run test:prototype` kiểm spike Node cũ trong `prototypes/node-spike/`. Xem [quy ước asset](../assets/README.md) và [quy trình release](RELEASE.md).

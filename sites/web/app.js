@@ -1,3 +1,4 @@
+import { roomLink } from './room-link.js';
 import {matrix, TEAR_MS} from './matrix.js';
 import {giftSound} from './sound.js';
 
@@ -46,20 +47,20 @@ const setMatrix = matrix($('matrix'), $('avatar'), $('artifact'), {
 });
 const packs = {her:[0,1,2], him:[0,3,4]};
 const fresh = () => ({profile:'her', phase:'idle', reactions:[], kept:[], shared:false});
-const link = new URLSearchParams(location.hash.slice(1));
-const playToken = link.get('play');
-const reportToken = link.get('report');
+const { mode, token } = roomLink(location.hash);
+const playToken = mode === 'play' ? token : null;
+const reportToken = mode === 'report' ? token : null;
 const key = 'giftu-spike-a-v1';
 let state = fresh(), lang, pending = false, installPrompt;
 let sound = false;
 const soundFX = giftSound();
 try {
   const stored = JSON.parse(localStorage.getItem(key));
-  if (!playToken && !reportToken && stored && Object.hasOwn(packs,stored.profile) && ['idle','play','review','consent','done'].includes(stored.phase) && Array.isArray(stored.reactions) && Array.isArray(stored.kept)) state = stored;
+  if (mode === 'demo' && stored && Object.hasOwn(packs,stored.profile) && ['idle','play','review','consent','done'].includes(stored.phase) && Array.isArray(stored.reactions) && Array.isArray(stored.kept)) state = stored;
   lang = localStorage.getItem('giftu-language');
 } catch {}
 if (!Object.hasOwn(copy,lang)) lang = Object.keys(copy).find(code => navigator.language.toLowerCase().startsWith(code)) || 'en';
-function store() { if (playToken || reportToken) return; try { localStorage.setItem(key,JSON.stringify(state)); } catch {} }
+function store() { if (mode !== 'demo') return; try { localStorage.setItem(key,JSON.stringify(state)); } catch {} }
 const ui = {
   vi: {
     headline: 'GuBot đoán quà.', intro: 'Bạn chấm ba món, GuBot lo phần tự tin.',
@@ -77,6 +78,7 @@ const ui = {
     report: 'Kết quả đoán quà', unavailable: 'Chưa có kết quả được chia sẻ.',
     refresh: 'Tải lại kết quả', loading: 'Đang mở phòng…',
     error: 'Không kết nối được với phòng. Hãy thử lại.', retry: 'Thử lại',
+    invalidLink: 'Link không hợp lệ hoặc đã hết hạn', inviteLinkHelp: 'Kiểm tra lại link hoặc xin người mời gửi link mới.', reportLinkHelp: 'Dùng link kết quả riêng đã lưu. Nếu phòng đã hết hạn, hãy tạo phòng mới.', home: 'Về trang chủ',
     copy: 'Sao chép', copied: 'Đã sao chép',
   },
   en: {
@@ -95,6 +97,7 @@ const ui = {
     report: 'Gift picks', unavailable: 'No result has been shared.',
     refresh: 'Refresh results', loading: 'Opening room…',
     error: 'Could not reach the room. Try again.', retry: 'Try again',
+    invalidLink: 'This link is invalid or expired', inviteLinkHelp: 'Check the link or ask the sender for a new one.', reportLinkHelp: 'Use your saved private results link. If the room expired, create a new one.', home: 'Back to home',
     copy: 'Copy', copied: 'Copied',
   },
   zh: {
@@ -113,10 +116,11 @@ const ui = {
     report: '礼物选择', unavailable: '还没有分享结果。',
     refresh: '刷新结果', loading: '正在打开房间…',
     error: '无法连接房间，请重试。', retry: '重试',
+    invalidLink: '链接无效或已过期', inviteLinkHelp: '请检查链接，或请邀请人发送新链接。', reportLinkHelp: '请使用之前保存的私人结果链接。如果房间已过期，请创建新房间。', home: '返回首页',
     copy: '复制', copied: '已复制',
   },
 };
-let remoteDeck, reportData, links, remoteError, ready = !playToken && !reportToken;
+let remoteDeck, reportData, links, remoteError, ready = mode === 'demo';
 let setupOpen = false, homeOpen = false;
 let roomProfile = state.profile;
 const text = key => ui[lang][key];
@@ -126,15 +130,23 @@ async function api(path, token, data) {
   if (token) headers.Authorization = 'Bearer ' + token;
   if (data) headers['Content-Type'] = 'application/json';
   const response = await fetch('/api/' + path, { method: data ? 'POST' : 'GET', headers, body: data ? JSON.stringify(data) : undefined });
-  if (!response.ok) throw new Error(String(response.status));
+  if (!response.ok) {
+    const error = new Error('Room request failed');
+    error.status = response.status;
+    throw error;
+  }
   return response.json();
 }
+function roomError(error) {
+  return mode !== 'demo' && [401, 404, 410].includes(error.status) ? 'link' : 'retry';
+}
+
 async function request(task) {
   if (pending) return;
   pending = true;
   remoteError = false;
   render();
-  try { await task(); } catch { remoteError = true; }
+  try { await task(); } catch (error) { remoteError = roomError(error); }
   finally { pending = false; render(); }
 }
 function review() {
@@ -196,8 +208,8 @@ async function react(value) {
     try {
       state.reactions = (await api('react', playToken, { action: value, index: state.reactions.length })).progress;
       remoteError = false;
-    } catch {
-      remoteError = true;
+    } catch (error) {
+      remoteError = roomError(error);
       pending = false;
       render();
       return;
@@ -256,7 +268,7 @@ function render() {
     $(id).textContent = label(n);
   }
   $('sound').setAttribute('aria-pressed', sound);
-  const screen = !ready ? 'loading' : reportToken ? 'report' : setupOpen ? 'setup' :
+  const screen = mode === 'invalid' || remoteError === 'link' ? 'invalid-link' : !ready ? 'loading' : reportToken ? 'report' : setupOpen ? 'setup' :
     homeOpen || state.phase === 'idle' ? 'entry' : state.phase;
   stage.dataset.screen = screen;
   $('install').hidden = Boolean(installed || screen === 'play');
@@ -277,7 +289,7 @@ function render() {
   for (const id of ['her', 'him', 'create-room', 'close-setup']) $(id).disabled = pending;
   for (const profile of Object.keys(packs)) $(profile).setAttribute('aria-pressed', profile === roomProfile);
   renderLinks();
-  $('room-error').hidden = !remoteError;
+  $('room-error').hidden = !remoteError || screen === 'invalid-link' || screen === 'loading';
   $('room-error').textContent = remoteError ? text('error') : '';
   const activeItem = screen === 'play' ? deck()[state.reactions.length] : null;
   $('scene').classList.toggle('playing', activeItem !== null);
@@ -294,9 +306,15 @@ function render() {
 }
 
 function renderGame(game, screen, id) {
-  if (screen === 'loading') {
-    if (remoteError) action(game, text('retry'), playToken ? loadPlay : loadReport, {kind:'primary'});
-    else add(game, 'p', text('loading'));
+  if (screen === 'invalid-link') {
+    add(game, 'h2', text('invalidLink'));
+    add(game, 'p', text(mode === 'report' ? 'reportLinkHelp' : 'inviteLinkHelp'));
+    add(game, 'a', text('home')).href = './';
+  } else if (screen === 'loading') {
+    if (remoteError) {
+      add(game, 'h2', text('error'));
+      action(game, text('retry'), playToken ? loadPlay : loadReport, {kind:'primary'});
+    } else add(game, 'p', text('loading'));
   } else if (screen === 'report') {
     add(game, 'h2', text('report'));
     if (reportData.status === 'shared') showPicks(game, reportData.ids);
@@ -409,7 +427,7 @@ for (const profile of Object.keys(packs)) $(profile).onclick = () => {
   render();
 };
 brand.addEventListener('click', event => {
-  if (playToken || reportToken || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  if (mode !== 'demo' || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   event.preventDefault();
   if (pending) return;
   homeOpen = true;

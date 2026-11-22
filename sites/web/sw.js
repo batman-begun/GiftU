@@ -1,6 +1,6 @@
 const prefix = 'giftu-shell-';
-const version = prefix + '0.4.0-clay';
-const files = ['./','./index.html','./style.css','./app.js','./matrix.js','./matrix-art.js','./sound.js','./clay-gifts.svg','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const version = prefix + '0.4.1';
+const files = ['./','./index.html','./style.css','./app.js','./room-link.js','./matrix.js','./matrix-art.js','./sound.js','./clay-gifts.svg','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e => {
   e.waitUntil(caches.open(version).then(cache=>cache.addAll(files.map(url=>new Request(url,{cache:'reload'})))).then(()=>self.skipWaiting()));
 });

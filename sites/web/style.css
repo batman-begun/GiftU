@@ -175,7 +175,7 @@ html[lang="zh"] .experience :is(h1, h2) { letter-spacing: normal; }
 #game > button { justify-self: start; }
 #game .choices, #game .actions { align-items: flex-start; }
 #game ul { margin: 0; padding-inline-start: 1.2rem; }
-:is([data-screen="review"], [data-screen="consent"], [data-screen="setup"], [data-screen="done"], [data-screen="report"], [data-screen="loading"]) .scene {
+:is([data-screen="review"], [data-screen="consent"], [data-screen="setup"], [data-screen="done"], [data-screen="report"], [data-screen="loading"], [data-screen="invalid-link"]) .scene {
   height: clamp(8rem, 29dvh, 18rem);
 }
 dialog {
