@@ -276,3 +276,33 @@ dialog::backdrop { background: var(--scrim); }
 @media (max-height: 42rem) and (max-width: 47.99rem) {
   main[data-screen="entry"] .scene { height: clamp(9rem, 31dvh, 15rem); }
 }
+.invite-steps {
+  margin: 0;
+  padding-inline-start: 1.35rem;
+  display: grid;
+  gap: .35rem;
+}
+.invite-preview {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .65rem;
+  padding: .65rem .85rem;
+}
+.invite-preview summary { cursor: pointer; }
+.invite-preview blockquote {
+  border-inline-start: 2px solid var(--petal-line);
+  margin: .7rem 0 .45rem;
+  padding-inline-start: .7rem;
+}
+#invite-message {
+  width: 100%;
+  padding: .6rem .75rem;
+  border-radius: .55rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font: inherit;
+  resize: vertical;
+}
+#links-ready { margin: .5rem 0 0; }
+#links button { white-space: normal; }

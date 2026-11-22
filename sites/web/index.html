@@ -35,24 +35,32 @@
     </div>
     <div class="experience">
       <section class="intro" aria-labelledby="headline">
-        <h1 id="headline">Bạn đã có quà chưa?</h1>
-        <p id="intro">Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.</p>
+        <h1 id="headline" tabindex="-1">Biến việc tặng quà thành một trò chơi.</h1>
+        <p id="intro">Tôi là GuBot. Bạn muốn tặng quà hay được mời chơi?</p>
+        <div id="entry-roles" class="gift-paths" hidden>
+          <button id="choose-giver" class="gift-path gift-path-open" type="button"></button>
+          <button id="choose-receiver" class="gift-path gift-path-planned" type="button"></button>
+        </div>
         <div id="gift-paths" class="gift-paths" hidden>
-          <div class="gift-path gift-path-planned">
+          <button class="gift-path gift-path-planned" id="open-hunt" type="button">
             <strong id="hunt"></strong><span id="huntDetail"></span>
-          </div>
+          </button>
           <button class="gift-path gift-path-open" id="open-setup" type="button">
             <strong id="guess"></strong><span id="guessDetail"></span>
           </button>
         </div>
         <div class="actions">
           <button class="quiet" id="start" type="button" hidden></button>
+          <button class="quiet" id="intro-back" type="button" hidden></button>
         </div>
         <p class="small" id="scope" hidden></p>
         <noscript><p>Bật JavaScript để chơi. Enable JavaScript to play. 请启用 JavaScript 开始游戏。</p></noscript>
       </section>
       <section id="setup" aria-labelledby="setup-title" hidden>
         <h1 id="setup-title" tabindex="-1"></h1>
+        <p id="setup-lead"></p>
+        <ol class="invite-steps" id="invite-steps"></ol>
+        <details class="invite-preview"><summary id="preview-title"></summary><blockquote id="preview-greeting"></blockquote><p id="preview-consent"></p></details>
         <div class="choices" role="group" id="profiles">
           <button id="her" type="button"></button>
           <button id="him" type="button"></button>
@@ -69,7 +77,7 @@
   </main>
   <dialog id="help">
     <p id="helptext"></p>
-    <p class="small" id="build">Spike A v0.4.2</p>
+    <p class="small" id="build">Spike A v0.4.3</p>
     <form method="dialog"><button id="close" type="submit"></button></form>
   </dialog>
   <script type="module" src="./app.js"></script>
