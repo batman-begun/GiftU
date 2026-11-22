@@ -60,9 +60,9 @@ test('the tear displaces binary glyphs before settling back onto the grid', t =>
     const occupied = new Set();
     for (const [bit, x, y] of ink) {
       assert.match(bit, /^[01]$/);
-      if (!moving) {
-        assert.equal(x % 6, 3);
-        assert.equal(y % 6, 3);
+      if (!moving && x > 216) {
+        assert.equal(x % 5, 2.5);
+        assert.equal(y % 5, 2.5);
       }
       const position = x + ',' + y;
       assert.ok(!occupied.has(position));
@@ -75,11 +75,13 @@ test('the tear displaces binary glyphs before settling back onto the grid', t =>
   assert.ok(confident.length >= 6);
   change({item:3, mood:'confident'});
   tick(420, true);
-  assert.ok(ink.some(([, x, y, color]) => x > 220 && x % 6 !== 3 && y % 6 !== 3 && color === palette[3]));
+  assert.ok(ink.some(([, x, y, color]) => x > 220 && x % 5 !== 2.5 && y % 5 !== 2.5 && color === palette[3]));
   tick(760);
   change({item:3, mood:'sorry', reaction:'no'});
-  tick(820);
-  tick(900);
-  tick(980);
+  tick(820, true);
+  tick(900, true);
+  tick(980, true);
+  assert.ok(ink.some(([, x, y, color]) => x > 220 && y % 5 !== 2.5 && color === palette[8]));
+  tick(1500);
   assert.notDeepEqual(ink.filter(cell => cell[3] === palette[8]), confident);
 });

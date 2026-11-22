@@ -1,5 +1,5 @@
 import { roomLink } from './room-link.js';
-import {matrix, TEAR_MS} from './matrix.js';
+import {matrix, TEAR_MS, IMPACT_MS, SINK_MS} from './matrix.js';
 import {giftSound} from './sound.js';
 
 const copy = {
@@ -63,7 +63,7 @@ if (!Object.hasOwn(copy,lang)) lang = Object.keys(copy).find(code => navigator.l
 function store() { if (mode !== 'demo') return; try { localStorage.setItem(key,JSON.stringify(state)); } catch {} }
 const ui = {
   vi: {
-    headline: 'GuBot đoán quà.', intro: 'Bạn chấm ba món, GuBot lo phần tự tin.',
+    headline: 'Bạn đã có quà chưa?', intro: 'Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.', hunt: 'Đã có quà', huntDetail: 'Giấu quà bằng một cuộc săn kho báu. Đang phát triển.', guess: 'Chưa biết tặng gì', guessDetail: 'Mời người ấy chơi đoán gu.',
     start: 'Chơi thử', resume: 'Chơi tiếp', invite: 'Tạo link mời chơi', room: 'Chọn bộ quà gợi ý',
     create: 'Tạo phòng', creating: 'Đang tạo phòng…', back: 'Quay lại',
     play: 'Bắt đầu đoán quà', scope: 'Bản thử lưu lựa chọn trên thiết bị này.',
@@ -82,7 +82,7 @@ const ui = {
     copy: 'Sao chép', copied: 'Đã sao chép',
   },
   en: {
-    headline: 'GuBot guesses gifts.', intro: 'Rate three gifts. GuBot supplies the confidence.',
+    hunt: 'I have a gift', huntDetail: 'Hide it in a treasure hunt. In development.', guess: 'I need a gift idea', guessDetail: 'Invite them to a taste-guessing game.', headline: 'Do you have a gift yet?', intro: 'I’m GuBot. Let’s find a gift or hide one.',
     start: 'Try it', resume: 'Resume', invite: 'Create an invite', room: 'Choose a gift catalog',
     create: 'Create room', creating: 'Creating room…', back: 'Back',
     play: 'Start guessing', scope: 'Demo picks stay on this device.',
@@ -101,7 +101,7 @@ const ui = {
     copy: 'Copy', copied: 'Copied',
   },
   zh: {
-    headline: 'GuBot 猜礼物。', intro: '你来评三件礼物，GuBot 负责自信。',
+    hunt: '已经有礼物', huntDetail: '用寻宝游戏藏起礼物。开发中。', guess: '还没想好送什么', guessDetail: '邀请对方玩礼物猜猜看。', headline: '你已经准备好礼物了吗？', intro: '我是 GuBot。你可以把礼物藏进寻宝游戏，或者让我帮你猜对方的喜好。',
     start: '试玩', resume: '继续游戏', invite: '创建邀请链接', room: '选择礼物目录',
     create: '创建房间', creating: '正在创建房间…', back: '返回',
     play: '开始猜礼物', scope: '试玩选择只保存在此设备上。',
@@ -221,14 +221,16 @@ async function react(value) {
     reaction: value,
   });
   soundFX.play(value);
-  animateGift({
-    like: [{transform:'scale(1)'}, {transform:'scale(1.14,.87)'}, {transform:'scale(.58)', opacity:0}],
-    no: [{transform:'none'}, {transform:'translateY(34%) rotate(12deg) scale(.84)', opacity:0}],
-    skip: [{transform:'none'}, {transform:'translateX(26%) rotate(-12deg)', opacity:0}],
-  }[value], 330, 'ease-in');
+  const duration = value === 'like' ? IMPACT_MS : value === 'no' ? SINK_MS : 330;
+  if (value === 'like') playImpact();
+  else animateGift(value === 'no' ? [
+    {transform:'none', opacity:1},
+    {transform:'translateY(16%) rotate(-30deg) scale(.84)', opacity:1, offset:.36},
+    {transform:'translateY(92%) rotate(-175deg) scale(.14)', opacity:0},
+  ] : [{transform:'none'}, {transform:'translateX(26%) rotate(-12deg)', opacity:0}], duration, 'ease-in');
   if (state.reactions.length === deck().length) review();
   store();
-  setTimeout(() => { pending = false; render(); focus($('game')); },motion.matches?0:330);
+  setTimeout(() => { pending = false; render(); focus($('game')); },motion.matches ? 0 : duration);
 }
 function undo() {
   if (playToken) return request(async () => {
@@ -274,10 +276,14 @@ function render() {
   $('install').hidden = Boolean(installed || screen === 'play');
   $('sound').hidden = screen !== 'play' && (screen !== 'entry' || Boolean(reportToken));
   $('intro').textContent = playToken ? label('greeting') : text('intro');
-  $('headline').textContent = text('headline');
+  $('headline').textContent = playToken ? text('play') : text('headline');
+  $('gift-paths').hidden = Boolean(playToken);
+  for (const key of ['hunt', 'huntDetail', 'guess', 'guessDetail']) $(key).textContent = text(key);
   $('start').textContent = playToken ? text('play') : text(resumeDemo() ? 'resume' : 'start');
   $('start').hidden = false;
-  $('open-setup').textContent = text('invite');
+  $('start').classList.toggle('primary', Boolean(playToken));
+  $('start').classList.toggle('quiet', !playToken);
+
   $('open-setup').hidden = Boolean(playToken);
   $('scope').textContent = text('scope');
   $('scope').hidden = Boolean(playToken);
@@ -382,6 +388,32 @@ let visibleGift = null, giftAnimation;
 function animateGift(keyframes, duration, easing) {
   giftAnimation?.cancel();
   giftAnimation = motion.matches ? null : clay.animate?.(keyframes, {duration, easing, fill:'forwards'});
+}
+
+function playImpact() {
+  if (motion.matches || !clay.animate) return;
+  const box = clay.getBoundingClientRect();
+  if (!box.width) return;
+  giftAnimation?.cancel();
+  const impact = $('impact-gift');
+  impact.firstElementChild.setAttribute('href', $('gift-shape').getAttribute('href'));
+  const size = Math.min(window.innerWidth, window.innerHeight) * .99;
+  const dx = box.left + box.width / 2 - window.innerWidth / 2;
+  const dy = box.top + box.height / 2 - window.innerHeight / 2;
+  impact.style.setProperty('--impact-size', size + 'px');
+  impact.hidden = false;
+  clay.style.visibility = 'hidden';
+  const animation = impact.animate([
+    { transform: `translate(${dx}px,${dy}px) scale(${box.width / size})` },
+    { transform: 'scale(1.24)', offset: .36 },
+    { transform: 'scale(1.24,.85)', offset: .48 },
+    { transform: 'scale(1.03)', opacity: 1, offset: .68 },
+    { transform: 'scale(.97)', opacity: 0 },
+  ], { duration: IMPACT_MS, easing: 'cubic-bezier(.18,.7,.23,1)' });
+  const clear = () => { impact.hidden = true; clay.style.visibility = ''; };
+  animation.onfinish = clear;
+  animation.oncancel = clear;
+  giftAnimation = animation;
 }
 
 function showGift(id) {

@@ -25,6 +25,12 @@
 
 - Chặn link thiếu mã, sai định dạng, trùng tham số hoặc chứa cả hai vai trò. Link sai hoặc hết hạn có hướng thoát, lỗi mạng lúc mở phòng có nút thử lại. Quyền link và consent vẫn do Worker xử lý.
 
+## Ứng viên v0.4.2
+
+- Đối chiếu mockup GuBot và renderer Binary Matrix Showcase ở `2a43fbe`. Tăng mật độ glyph, tách nhịp thở khỏi vòng sóng, thêm phản ứng đập toàn màn hình và lưới xoáy nhấn chìm vật phẩm. Hai cue âm thanh là chime và tiếng xả tổng hợp.
+- Trang chủ thử hỏi theo ý định người tặng, trình bày 1A đang phát triển và 1B đang chạy. Người nhận có link vẫn đi thẳng tới lời mời.
+- Kiểm Node 24 pass 6/6. Chrome 390 CSS px đã kiểm vào setup, quay lại, Thích và Không hợp đến review. Kiểm tĩnh giao diện sạch. Cần UAT độ mượt, âm thanh và nhận diện nhánh trên Android thật. Report v0 để sau.
+
 ## Việc tiếp theo
 
 1. UAT v0.4.1 trên Android qua Live Testbed. Kiểm độ rõ nét miệng và quà, cảm giác cú xé, âm thanh và hai link.
