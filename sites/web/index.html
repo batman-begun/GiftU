@@ -23,6 +23,7 @@
       </select>
     </div>
   </header>
+  <svg id="impact-gift" viewBox="0 0 160 160" aria-hidden="true" focusable="false" hidden><use></use></svg>
   <main data-screen="entry">
     <div id="scene" class="scene" aria-hidden="true">
       <div id="avatar"></div>
@@ -34,11 +35,18 @@
     </div>
     <div class="experience">
       <section class="intro" aria-labelledby="headline">
-        <h1 id="headline">GuBot đoán quà.</h1>
-        <p id="intro">Bạn chấm ba món, GuBot lo phần tự tin.</p>
+        <h1 id="headline">Bạn đã có quà chưa?</h1>
+        <p id="intro">Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.</p>
+        <div id="gift-paths" class="gift-paths" hidden>
+          <div class="gift-path gift-path-planned">
+            <strong id="hunt"></strong><span id="huntDetail"></span>
+          </div>
+          <button class="gift-path gift-path-open" id="open-setup" type="button">
+            <strong id="guess"></strong><span id="guessDetail"></span>
+          </button>
+        </div>
         <div class="actions">
-          <button class="primary" id="start" type="button" hidden></button>
-          <button class="quiet" id="open-setup" type="button" hidden></button>
+          <button class="quiet" id="start" type="button" hidden></button>
         </div>
         <p class="small" id="scope" hidden></p>
         <noscript><p>Bật JavaScript để chơi. Enable JavaScript to play. 请启用 JavaScript 开始游戏。</p></noscript>
@@ -61,7 +69,7 @@
   </main>
   <dialog id="help">
     <p id="helptext"></p>
-    <p class="small" id="build">Spike A v0.4.1</p>
+    <p class="small" id="build">Spike A v0.4.2</p>
     <form method="dialog"><button id="close" type="submit"></button></form>
   </dialog>
   <script type="module" src="./app.js"></script>

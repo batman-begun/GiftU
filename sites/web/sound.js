@@ -1,7 +1,5 @@
 const voice = {
   ready: [182, 207, 165, .24],
-  like: [168, 252, 213, .29],
-  no: [212, 147, 103, .31],
   skip: [160, 202, 144, .23],
 };
 
@@ -53,6 +51,57 @@ export function giftSound() {
     source.start(now);
   }
 
+  function celebration() {
+    const now = audio.currentTime;
+    for (const [frequency, delay, strength] of [[523.25, .04, .12], [659.25, .10, .13], [783.99, .136, .12], [1046.5, .157, .09]]) {
+      const start = now + delay;
+      const tone = audio.createOscillator();
+      const level = audio.createGain();
+      tone.type = 'triangle';
+      tone.frequency.value = frequency;
+      level.gain.setValueAtTime(.001, start);
+      level.gain.linearRampToValueAtTime(strength, start + .018);
+      level.gain.exponentialRampToValueAtTime(.001, start + .24);
+      tone.connect(level).connect(output);
+      tone.start(start);
+      tone.stop(start + .245);
+    }
+  }
+
+  function flush() {
+    const now = audio.currentTime;
+    const water = audio.createBufferSource();
+    const swirl = audio.createBiquadFilter();
+    const level = audio.createGain();
+    water.buffer = noise;
+    water.loop = true;
+    swirl.type = 'bandpass';
+    swirl.Q.value = .72;
+    swirl.frequency.setValueAtTime(430, now);
+    swirl.frequency.exponentialRampToValueAtTime(1400, now + .19);
+    swirl.frequency.exponentialRampToValueAtTime(220, now + .63);
+    level.gain.setValueAtTime(.001, now);
+    level.gain.linearRampToValueAtTime(.31, now + .12);
+    level.gain.exponentialRampToValueAtTime(.045, now + .52);
+    level.gain.exponentialRampToValueAtTime(.001, now + .66);
+    water.connect(swirl).connect(level).connect(output);
+    water.start(now);
+    water.stop(now + .67);
+    for (const [hz, delay] of [[360,.16],[255,.31],[184,.43],[109,.54]]) {
+      const start = now + delay;
+      const bubble = audio.createOscillator();
+      const pop = audio.createGain();
+      bubble.frequency.setValueAtTime(hz, start);
+      bubble.frequency.exponentialRampToValueAtTime(hz * .42, start + .085);
+      pop.gain.setValueAtTime(.001, start);
+      pop.gain.linearRampToValueAtTime(.08, start + .012);
+      pop.gain.exponentialRampToValueAtTime(.001, start + .09);
+      bubble.connect(pop).connect(output);
+      bubble.start(start);
+      bubble.stop(start + .095);
+    }
+  }
+
   return {
     async toggle() {
       if (enabled) {
@@ -84,6 +133,8 @@ export function giftSound() {
     play(cue) {
       if (!enabled || audio.state !== 'running') return;
       if (cue === 'tear') tearCue();
+      else if (cue === 'like') celebration();
+      else if (cue === 'no') flush();
       else voiceCue(cue);
     },
   };
