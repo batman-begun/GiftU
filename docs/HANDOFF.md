@@ -1,8 +1,12 @@
 # Bàn giao hiện tại
 
-## GuBot clay · Spike A v0.4.4
+## GuBot clay · Spike A v0.4.4 · Sites version 8
 
-- Bản ứng viên từ 23/11/2026 thay hình GuBot trên trang mở và trong game bằng atlas clay 2.5D. Mười hai ô dùng chung một WebP 19.272 byte. Canvas giữ sóng, nhịp thở và hiệu ứng theo lượt chơi. Service worker cache atlas cùng app shell.
+**23/11/2026** · [Live Testbed](https://giftu.batmanbegun.chatgpt.site/) · [PR #5](https://github.com/batman-begun/GiftU/pull/5)
+
+- GitHub merge `b85fb9e31b78807c3ef438c93f4468525e09bdae`, source Sites `5d182ea62c2f5f3d041a7573ebf84a89ad20c759`. Rollback là Sites version 7. WebP và module GuBot trên live khớp byte với bản đã test.
+
+- Bản live thay hình GuBot trên trang mở và trong game bằng atlas clay 2.5D. Mười hai ô dùng chung một WebP 19.272 byte. Canvas giữ sóng, nhịp thở và hiệu ứng theo lượt chơi. Service worker cache atlas cùng app shell.
 - Chrome preview đã kiểm GuBot xuất hiện bên món giấy dát vàng, bấm Không hợp khi tắt tiếng, rồi chuyển sang Nến thơm. Chạy lại bằng `npm run dev`, chọn “Tôi được mời chơi” và chơi thử. `npm test` kiểm Worker, Matrix và định dạng/dung lượng atlas.
 - Việc tiếp theo là UAT Android thật, ưu tiên độ rõ của miệng, nhịp liếc xuống và cười chữa quê. Phần dưới ghi lại bản live trước lần triển khai clay.
 
