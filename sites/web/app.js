@@ -2,6 +2,8 @@ import { roomLink } from './room-link.js';
 import {matrix, TEAR_MS, IMPACT_MS, SINK_MS} from './matrix.js';
 import {giftSound} from './sound.js';
 import {clayGuBot} from './gubot.js';
+import {huntFlow} from './hunt.js';
+import {giftSuggestions} from './report-v0.js';
 
 const copy = {
   vi: {
@@ -52,6 +54,7 @@ const fresh = () => ({profile:'her', phase:'idle', reactions:[], kept:[], shared
 const { mode, token } = roomLink(location.hash);
 const playToken = mode === 'play' ? token : null;
 const reportToken = mode === 'report' ? token : null;
+const huntToken = mode === 'hunt' ? token : null;
 const key = 'giftu-spike-a-v1';
 let state = fresh(), lang, pending = false, installPrompt;
 let sound = false;
@@ -70,7 +73,7 @@ const ui = {
     giver: "Tôi muốn tặng quà",
     receiver: "Tôi được mời chơi",
     receiverHelp: "Mở lại link người ấy gửi trong tin nhắn để vào đúng trò chơi. Bạn cũng có thể chơi thử một ván tại đây.",
-    huntHelp: "Chuẩn bị manh mối và màn bật mí, rồi gửi link để người ấy đi tìm món quà. Trò săn kho báu đang được phát triển.",
+    readyToGive: "Tôi đã có quà", buyingTip: "Mẹo chọn", emptyReport: "Chưa đủ tín hiệu để gợi ý quà.",
     inviteTitle: "Rủ người ấy chơi với GuBot",
     inviteLead: "Một ván, ba lượt đoán. Bạn tự nhắn và trò chuyện với người ấy.",
     steps: ["Chọn bộ quà, tạo link rồi tự gửi qua tin nhắn.", "Tôi đoán ba món. Người ấy chấm từng món và chọn có chia sẻ kết quả hay không.", "Nếu họ chia sẻ, mở link kết quả riêng rồi tự quyết định tặng gì."],
@@ -81,7 +84,7 @@ const ui = {
     message: "Thử xem GuBot đoán gu của bạn trúng mấy món nhé!",
     copyMessage: "Sao chép lời mời và link",
     shareReady: "Hai link đã sẵn sàng",
-    headline: 'Bạn đã có quà chưa?', intro: 'Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.', hunt: 'Đã có quà', huntDetail: 'Giấu quà bằng một cuộc săn kho báu. Đang phát triển.', guess: 'Chưa biết tặng gì', guessDetail: 'Mời người ấy chơi đoán gu.',
+    headline: 'Bạn đã có quà chưa?', intro: 'Tôi là GuBot. Mình chọn quà hoặc giấu quà nhé.', hunt: 'Đã có quà', huntDetail: 'Tạo manh mối và gửi link săn quà.', guess: 'Chưa biết tặng gì', guessDetail: 'Mời người ấy chơi đoán gu.',
     start: 'Chơi thử', resume: 'Chơi tiếp', invite: 'Tạo link mời chơi', room: 'Chọn bộ quà gợi ý',
     create: 'Tạo phòng', creating: 'Đang tạo phòng…', back: 'Quay lại',
     play: 'Bắt đầu đoán quà', scope: 'Bản thử lưu lựa chọn trên thiết bị này.',
@@ -105,7 +108,7 @@ const ui = {
     giver: "I want to give a gift",
     receiver: "I was invited to play",
     receiverHelp: "Open the invite from your messages to find the right game. You can also play a demo here.",
-    huntHelp: "Prepare a clue and a reveal, then send a link so they can hunt for the gift. Treasure hunts are in development.",
+    readyToGive: "I have my gift", buyingTip: "Buying tip", emptyReport: "There aren’t enough picks to suggest a gift yet.",
     inviteTitle: "Invite them to play with GuBot",
     inviteLead: "One game, three guesses. You do the messaging.",
     steps: ["Pick a gift catalog, create the link and send it in a message.", "I guess three gifts. They rate each one and decide whether to share the result.", "If they share, open your private results link and decide what to give."],
@@ -116,7 +119,7 @@ const ui = {
     message: "Try GuBot and see how many gifts it guesses right!",
     copyMessage: "Copy message and invite link",
     shareReady: "Your two links are ready",
-    hunt: 'I have a gift', huntDetail: 'Hide it in a treasure hunt. In development.', guess: 'I need a gift idea', guessDetail: 'Invite them to a taste-guessing game.', headline: 'Do you have a gift yet?', intro: 'I’m GuBot. Let’s find a gift or hide one.',
+    hunt: 'I have a gift', huntDetail: 'Create a clue and send a hunt link.', guess: 'I need a gift idea', guessDetail: 'Invite them to a taste-guessing game.', headline: 'Do you have a gift yet?', intro: 'I’m GuBot. Let’s find a gift or hide one.',
     start: 'Try it', resume: 'Resume', invite: 'Create an invite', room: 'Choose a gift catalog',
     create: 'Create room', creating: 'Creating room…', back: 'Back',
     play: 'Start guessing', scope: 'Demo picks stay on this device.',
@@ -140,7 +143,7 @@ const ui = {
     giver: "我想送礼物",
     receiver: "我收到邀请了",
     receiverHelp: "请打开消息里的邀请链接进入对应的游戏。你也可以在这里试玩。",
-    huntHelp: "准备线索和揭晓环节，再发链接让对方寻找礼物。寻宝游戏正在开发中。",
+    readyToGive: "我已经准备好礼物", buyingTip: "挑选建议", emptyReport: "目前没有足够的选择来推荐礼物。",
     inviteTitle: "邀请对方和 GuBot 玩",
     inviteLead: "一局猜三次，你负责发消息和聊天。",
     steps: ["选择礼物目录，创建链接，再通过消息发送。", "我猜三件礼物，对方逐一评价，并决定是否分享结果。", "如果对方分享，打开私人结果链接，再决定送什么。"],
@@ -151,7 +154,7 @@ const ui = {
     message: "来试试 GuBot 能猜中几件你喜欢的礼物！",
     copyMessage: "复制邀请消息和链接",
     shareReady: "两个链接已准备好",
-    hunt: '已经有礼物', huntDetail: '用寻宝游戏藏起礼物。开发中。', guess: '还没想好送什么', guessDetail: '邀请对方玩礼物猜猜看。', headline: '你已经准备好礼物了吗？', intro: '我是 GuBot。你可以把礼物藏进寻宝游戏，或者让我帮你猜对方的喜好。',
+    hunt: '已经有礼物', huntDetail: '写一条线索并发送寻宝链接。', guess: '还没想好送什么', guessDetail: '邀请对方玩礼物猜猜看。', headline: '你已经准备好礼物了吗？', intro: '我是 GuBot。你可以把礼物藏进寻宝游戏，或者让我帮你猜对方的喜好。',
     start: '试玩', resume: '继续游戏', invite: '创建邀请链接', room: '选择礼物目录',
     create: '创建房间', creating: '正在创建房间…', back: '返回',
     play: '开始猜礼物', scope: '试玩选择只保存在此设备上。',
@@ -171,7 +174,8 @@ const ui = {
   },
 };
 let remoteDeck, reportData, links, remoteError, ready = mode === 'demo';
-let setupOpen = false, homeOpen = false;
+let setupOpen = false, homeOpen = false, huntOpen = false;
+const hunt = huntFlow({ api, add, action, focus, language: () => lang, token: huntToken });
 let introStep = 'home';
 let inviteDraft;
 let roomProfile = state.profile;
@@ -340,7 +344,7 @@ function render() {
     $(id).textContent = label(n);
   }
   $('sound').setAttribute('aria-pressed', sound);
-  const screen = mode === 'invalid' || remoteError === 'link' ? 'invalid-link' : !ready ? 'loading' : reportToken ? 'report' : setupOpen ? 'setup' :
+  const screen = mode === 'invalid' || remoteError === 'link' ? 'invalid-link' : huntToken ? 'hunt-play' : !ready ? 'loading' : huntOpen ? 'hunt-create' : reportToken ? 'report' : setupOpen ? 'setup' :
     homeOpen || state.phase === 'idle' ? 'entry' : state.phase;
   stage.dataset.screen = screen;
   $('install').hidden = Boolean(installed || screen === 'play');
@@ -348,9 +352,8 @@ function render() {
   const isHome = mode === 'demo' && introStep === 'home';
   const isGiver = mode === 'demo' && introStep === 'giver';
   const isReceiver = mode === 'demo' && introStep === 'receiver';
-  const isHunt = mode === 'demo' && introStep === 'hunt';
-  $('headline').textContent = text(playToken ? 'play' : isHome ? 'purpose' : isGiver ? 'headline' : isReceiver ? 'receiver' : 'hunt');
-  $('intro').textContent = text(playToken ? 'greetingPlay' : isHome ? 'rolePrompt' : isGiver ? 'intro' : isReceiver ? 'receiverHelp' : 'huntHelp');
+  $('headline').textContent = text(playToken ? 'play' : isHome ? 'purpose' : isGiver ? 'headline' : 'receiver');
+  $('intro').textContent = text(playToken ? 'greetingPlay' : isHome ? 'rolePrompt' : isGiver ? 'intro' : 'receiverHelp');
   $('entry-roles').hidden = !isHome;
   $('choose-giver').textContent = text('giver');
   $('choose-receiver').textContent = text('receiver');
@@ -366,6 +369,10 @@ function render() {
   $('scope').hidden = !(playToken || isReceiver);
   document.querySelector('.intro').hidden = screen !== 'entry';
   $('setup').hidden = screen !== 'setup';
+  const huntPanel = $('hunt-panel');
+  huntPanel.hidden = screen !== 'hunt-create' && screen !== 'hunt-play';
+  if (screen === 'hunt-create') hunt.renderCreator(huntPanel, closeHunt);
+  if (screen === 'hunt-play') hunt.renderPlayer(huntPanel);
   $('setup-title').textContent = text('inviteTitle');
   $('setup-lead').textContent = text('inviteLead');
   $('invite-steps').replaceChildren();
@@ -385,7 +392,7 @@ function render() {
   $('artifact').hidden = activeItem === null;
   showGift(activeItem);
   const game = $('game');
-  game.hidden = screen === 'entry' || screen === 'setup';
+  game.hidden = screen === 'entry' || screen === 'setup' || !huntPanel.hidden;
   game.replaceChildren();
   renderGame(game, screen, activeItem);
   setMatrix({item: activeItem});
@@ -404,9 +411,13 @@ function renderGame(game, screen, id) {
     } else add(game, 'p', text('loading'));
   } else if (screen === 'report') {
     add(game, 'h2', text('report'));
-    if (reportData.status === 'shared') showPicks(game, reportData.ids);
-    else add(game, 'p', text('unavailable'));
-    action(game, text('refresh'), loadReport, {kind:'primary'});
+    if (reportData.status !== 'shared') add(game, 'p', text('unavailable'));
+    else if (!reportData.ids.length) add(game, 'p', text('emptyReport'));
+    else showReport(game, reportData.ids);
+    const controls = add(game, 'div', '');
+    controls.className = 'actions';
+    action(controls, text('readyToGive'), openHunt, {kind:'primary'});
+    action(controls, text('refresh'), loadReport, {kind:'quiet'});
   } else if (screen === 'play') {
     add(game, 'small', (state.reactions.length + 1) + ' / ' + deck().length);
     add(game, 'h2', label('gifts')[id]);
@@ -455,6 +466,21 @@ function renderGame(game, screen, id) {
       action(actions, label('again'), begin, {kind:'primary'});
       action(actions, text('back'), () => transition('idle'), {kind:'quiet'});
     }
+  }
+}
+
+function showReport(parent, ids) {
+  for (const id of ids) {
+    const suggestion = giftSuggestions(lang, id);
+    if (!suggestion) continue;
+    const card = add(parent, 'article', '');
+    card.className = 'report-pick';
+    add(card, 'h3', label('gifts')[id]);
+    const list = add(card, 'ul', '');
+    for (const idea of suggestion.ideas) add(list, 'li', idea);
+    const note = add(card, 'p', '');
+    add(note, 'strong', text('buyingTip') + ' · ');
+    note.append(suggestion.tip);
   }
 }
 
@@ -545,6 +571,7 @@ brand.addEventListener('click', event => {
   if (pending) return;
   homeOpen = true;
   setupOpen = false;
+  huntOpen = false;
   remoteError = false;
   introStep = 'home';
   render();
@@ -557,8 +584,18 @@ function goIntro(step) {
 }
 $('choose-giver').onclick = () => goIntro('giver');
 $('choose-receiver').onclick = () => goIntro('receiver');
-$('open-hunt').onclick = () => goIntro('hunt');
-$('intro-back').onclick = () => goIntro(introStep === 'hunt' ? 'giver' : 'home');
+function openHunt() {
+  huntOpen = true;
+  render();
+  focus($('hunt-panel').querySelector('h1'));
+}
+function closeHunt() {
+  huntOpen = false;
+  render();
+  focus(reportToken ? $('game') : $('headline'));
+}
+$('open-hunt').onclick = openHunt;
+$('intro-back').onclick = () => goIntro('home');
 $('open-setup').onclick = () => {
   setupOpen = true;
   render();
@@ -566,6 +603,7 @@ $('open-setup').onclick = () => {
 };
 $('close-setup').onclick = () => {
   setupOpen = false;
+  huntOpen = false;
   remoteError = false;
   render();
   focus($('open-setup'));
@@ -619,4 +657,5 @@ function loadPlay() {
 }
 if (playToken) loadPlay();
 else if (reportToken) loadReport();
+else if (huntToken) hunt.load();
 window.addEventListener('hashchange', () => location.reload());

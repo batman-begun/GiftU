@@ -10,7 +10,7 @@ const secret = () => toHex(crypto.getRandomValues(new Uint8Array(32)));
 const hash = async token => toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))));
 const mime = { html: 'text/html', js: 'text/javascript', css: 'text/css', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml', webmanifest: 'application/manifest+json' };
 
-async function body(request) {
+async function body(request, limit = 1024) {
   const reader = request.body?.getReader();
   if (!reader) return null;
   const decoder = new TextDecoder();
@@ -20,7 +20,7 @@ async function body(request) {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.length;
-    if (size > 1024) {
+    if (size > limit) {
       await reader.cancel();
       return null;
     }
@@ -29,8 +29,48 @@ async function body(request) {
   try { return JSON.parse(input + decoder.decode()); } catch { return null; }
 }
 
+const huntText = (value, limit) => typeof value === 'string' && value.length <= limit ? value.trim() : '';
+const normalizeAnswer = value => value.normalize('NFD').toLowerCase()
+  .replace(/\p{M}/gu, '').replace(/đ/g, 'd').trim().replace(/\s+/gu, ' ');
+const bearer = request => /^Bearer ([a-f0-9]{64})$/.exec(request.headers.get('Authorization') ?? '')?.[1];
+
+async function huntApi(request, path, db, now) {
+  if (path === '/api/hunts' && request.method === 'POST') {
+    const data = await body(request, 8192);
+    const clue = huntText(data?.clue, 300);
+    const answer = normalizeAnswer(huntText(data?.answer, 100));
+    const reveal = huntText(data?.reveal, 500);
+    if (!clue || !answer || !reveal) return error(400);
+    const token = secret();
+    const key = await hash(token);
+    await db.batch([
+      db.prepare('DELETE FROM gift_hunts WHERE expires <= ?').bind(now),
+      db.prepare('INSERT INTO gift_hunts(token, clue, answer, reveal, expires) VALUES (?, ?, ?, ?, ?)')
+        .bind(key, clue, await hash(key + answer), reveal, now + ttl),
+    ]);
+    return json({ token }, 201);
+  }
+
+  const reading = path === '/api/hunt' && request.method === 'GET';
+  const solving = path === '/api/hunt/solve' && request.method === 'POST';
+  if (!reading && !solving) return error(404);
+  const token = bearer(request);
+  if (!token) return error(401);
+  const key = await hash(token);
+  const fields = reading ? 'clue' : 'answer, reveal';
+  const hunt = await db.prepare('SELECT ' + fields + ' FROM gift_hunts WHERE token = ? AND expires > ?').bind(key, now).first();
+  if (!hunt) return error(404);
+  if (reading) return json({ clue: hunt.clue });
+  const data = await body(request);
+  const answer = normalizeAnswer(huntText(data?.answer, 100));
+  if (!answer) return error(400);
+  if (await hash(key + answer) !== hunt.answer) return json({ solved: false });
+  return json({ solved: true, reveal: hunt.reveal });
+}
+
 async function api(request, path, db) {
   const now = Date.now();
+  if (path === '/api/hunts' || path === '/api/hunt' || path === '/api/hunt/solve') return huntApi(request, path, db, now);
   if (request.method === 'POST' && path === '/api/rooms') {
     const data = await body(request);
     if (!Object.hasOwn(deckByProfile, data?.profile ?? '')) return error(400);
@@ -49,7 +89,7 @@ async function api(request, path, db) {
   const reacting = path === '/api/react' && request.method === 'POST';
   const finishing = path === '/api/finish' && request.method === 'POST';
   if (!reports && !playing && !reacting && !finishing) return error(404);
-  const token = /^Bearer ([a-f0-9]{64})$/.exec(request.headers.get('Authorization') ?? '')?.[1];
+  const token = bearer(request);
   if (!token) return error(401);
   const key = await hash(token);
   const column = reports ? 'sender' : 'receiver';

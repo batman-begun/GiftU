@@ -42,7 +42,7 @@
           <button id="choose-receiver" class="gift-path gift-path-planned" type="button"></button>
         </div>
         <div id="gift-paths" class="gift-paths" hidden>
-          <button class="gift-path gift-path-planned" id="open-hunt" type="button">
+          <button class="gift-path gift-path-open" id="open-hunt" type="button">
             <strong id="hunt"></strong><span id="huntDetail"></span>
           </button>
           <button class="gift-path gift-path-open" id="open-setup" type="button">
@@ -71,13 +71,14 @@
         </div>
         <div id="links"></div>
       </section>
+      <section id="hunt-panel" hidden></section>
       <section id="game" tabindex="-1" aria-live="polite" hidden></section>
       <p id="room-error" role="alert" hidden></p>
     </div>
   </main>
   <dialog id="help">
     <p id="helptext"></p>
-    <p class="small" id="build">Spike A v0.4.3</p>
+    <p class="small" id="build">GiftU v0.5.0</p>
     <form method="dialog"><button id="close" type="submit"></button></form>
   </dialog>
   <script type="module" src="./app.js"></script>
