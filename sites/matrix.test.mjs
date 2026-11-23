@@ -1,25 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { botCell, mouthCell, palette, poses } from './web/matrix-art.js';
+import { palette } from './web/matrix-art.js';
 import { matrix } from './web/matrix.js';
-
-test('the scoop, cone and spill stay distinguishable with a feathered body', () => {
-  assert.equal(botCell(33, 40, 5, .5).strength, 1);
-  assert.equal(botCell(25, 81, 5, .5).ink, 0);
-  assert.ok(botCell(62, 76, 5, .5).strength > .6);
-  assert.equal(botCell(75, 75, 5, .5).strength, 0);
-  const edge = botCell(40, 24, 5, .5).strength;
-  assert.ok(edge > 0 && edge < 1);
-  assert.ok(botCell(26, 43.5, 5, .5).strength < .12);
-});
-
-test('every expression has distinct glyph-cell geometry', () => {
-  const positions = Array.from({length: 35 * 27}, (_, i) => [i % 35 + 21, Math.floor(i / 35) + 39]);
-  const mouths = Object.values(poses).map(pose => positions
-    .map(([x, y]) => Number(mouthCell(x, y, pose, 1))).join(''));
-  assert.equal(new Set(mouths).size, 5);
-
-});
 
 test('the tear displaces binary glyphs before settling back onto the grid', t => {
   const frames = new Map();
@@ -49,9 +31,8 @@ test('the tear displaces binary glyphs before settling back onto the grid', t =>
   const room = { addEventListener() {} };
   const canvas = {parentElement:room, getContext:() => ctx,
     getBoundingClientRect:() => ({left:0, top:0, width:358, height:470})};
-  const avatar = {getBoundingClientRect:() => ({left:12, top:58, width:198, height:188})};
   const artifact = {getBoundingClientRect:() => ({left:216, top:58, width:130, height:188})};
-  const change = matrix(canvas, avatar, artifact);
+  const change = matrix(canvas, artifact);
   function tick(time, moving = false) {
     now = time;
     const scheduled = [...frames.values()];
@@ -60,7 +41,7 @@ test('the tear displaces binary glyphs before settling back onto the grid', t =>
     const occupied = new Set();
     for (const [bit, x, y] of ink) {
       assert.match(bit, /^[01]$/);
-      if (!moving && x > 216) {
+      if (!moving) {
         assert.equal(x % 5, 2.5);
         assert.equal(y % 5, 2.5);
       }
@@ -71,17 +52,16 @@ test('the tear displaces binary glyphs before settling back onto the grid', t =>
   }
   change();
   tick(100);
-  const confident = ink.filter(cell => cell[3] === palette[8]);
-  assert.ok(confident.length >= 6);
-  change({item:3, mood:'confident'});
+  assert.ok(!ink.some(cell => cell[3] === palette[8]));
+  change({item:3});
   tick(420, true);
   assert.ok(ink.some(([, x, y, color]) => x > 220 && x % 5 !== 2.5 && y % 5 !== 2.5 && color === palette[3]));
   tick(760);
-  change({item:3, mood:'sorry', reaction:'no'});
+  change({item:3, reaction:'no'});
   tick(820, true);
   tick(900, true);
   tick(980, true);
   assert.ok(ink.some(([, x, y, color]) => x > 220 && y % 5 !== 2.5 && color === palette[8]));
   tick(1500);
-  assert.notDeepEqual(ink.filter(cell => cell[3] === palette[8]), confident);
+  assert.ok(!ink.some(cell => cell[3] === palette[8]));
 });

@@ -8,7 +8,7 @@ const error = status => json({ error: true }, status);
 const toHex = bytes => Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
 const secret = () => toHex(crypto.getRandomValues(new Uint8Array(32)));
 const hash = async token => toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))));
-const mime = { html: 'text/html', js: 'text/javascript', css: 'text/css', png: 'image/png', svg: 'image/svg+xml', webmanifest: 'application/manifest+json' };
+const mime = { html: 'text/html', js: 'text/javascript', css: 'text/css', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml', webmanifest: 'application/manifest+json' };
 
 async function body(request) {
   const reader = request.body?.getReader();

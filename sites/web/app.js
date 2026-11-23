@@ -1,6 +1,7 @@
 import { roomLink } from './room-link.js';
 import {matrix, TEAR_MS, IMPACT_MS, SINK_MS} from './matrix.js';
 import {giftSound} from './sound.js';
+import {clayGuBot} from './gubot.js';
 
 const copy = {
   vi: {
@@ -41,10 +42,11 @@ const $ = id => document.getElementById(id);
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const stage = document.querySelector('main');
 const brand = document.querySelector('.brand');
-const setMatrix = matrix($('matrix'), $('avatar'), $('artifact'), {
+const setMatrix = matrix($('matrix'), $('artifact'), {
   shade: () => [...document.querySelectorAll('header > *, .experience section:not([hidden]) > *, #room-error:not([hidden])')],
   quiet: () => !['entry', 'play'].includes(stage.dataset.screen),
 });
+const guBot = clayGuBot($('avatar'), motion, TEAR_MS);
 const packs = {her:[0,1,2], him:[0,3,4]};
 const fresh = () => ({profile:'her', phase:'idle', reactions:[], kept:[], shared:false});
 const { mode, token } = roomLink(location.hash);
@@ -267,11 +269,11 @@ async function react(value) {
   } else state.reactions.push(value);
   setMatrix({
     item: deck()[state.reactions.length - 1],
-    mood: {like:'boast', no:'sorry', skip:'puzzled'}[value],
     reaction: value,
   });
   soundFX.play(value);
   const duration = value === 'like' ? IMPACT_MS : value === 'no' ? SINK_MS : 330;
+  guBot.react(value, duration);
   if (value === 'like') playImpact();
   else animateGift(value === 'no' ? [
     {transform:'none', opacity:1},
@@ -386,10 +388,8 @@ function render() {
   game.hidden = screen === 'entry' || screen === 'setup';
   game.replaceChildren();
   renderGame(game, screen, activeItem);
-  setMatrix({
-    item: activeItem,
-    mood: {review:'puzzled', consent:'sorry', done:state.shared ? 'boast' : 'tired'}[screen],
-  });
+  setMatrix({item: activeItem});
+  guBot.show(screen, activeItem);
 }
 
 function renderGame(game, screen, id) {

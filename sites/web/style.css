@@ -306,3 +306,44 @@ dialog::backdrop { background: var(--scrim); }
 }
 #links-ready { margin: .5rem 0 0; }
 #links button { white-space: normal; }
+
+#avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+  pointer-events: none;
+}
+
+.clay-figure, .clay-shadow {
+  width: min(100cqw, 100cqh, 25rem);
+  aspect-ratio: 1;
+  grid-area: 1 / 1;
+}
+.clay-figure {
+  position: relative;
+  transform-origin: 50% 85%;
+}
+.clay-layer {
+  background-image: url('./gubot-clay-v1.webp');
+  background-repeat: no-repeat;
+  background-size: 400% 300%;
+}
+.clay-figure > .clay-layer {
+  position: absolute;
+  inset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .clay-body, .clay-eyes, .clay-mouth, .clay-tuft, .clay-drip {
+    transform-origin: 50% 85%;
+    animation: clay-breathe 3.9s ease-in-out infinite;
+  }
+  .clay-tuft { animation-delay: 110ms; }
+  .clay-drip { animation-delay: 170ms; }
+}
+@keyframes clay-breathe {
+  0%, 100% { transform: none; }
+  50% { transform: scale(1.012, .985); }
+}

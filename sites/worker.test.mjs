@@ -38,3 +38,12 @@ test('the clay sprite is served with its SVG media type', async () => {
   const source = await response.text();
   for (let id = 0; id < 5; id++) assert.match(source, new RegExp('id="gift-' + id + '"'));
 });
+
+test('the GuBot atlas loads as WebP inside its initial asset budget', async () => {
+  const response = await worker.fetch(new Request('https://giftu.test/gubot-clay-v1.webp'), {});
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Content-Type'), 'image/webp');
+  const bytes = Buffer.from(await response.arrayBuffer());
+  assert.equal(bytes.toString('ascii', 8, 12), 'WEBP');
+  assert.ok(bytes.length < 200_000);
+});
