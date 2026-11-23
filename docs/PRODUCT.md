@@ -8,7 +8,7 @@
 
 ## Spike A
 
-- Hai pack dữ liệu mẫu, mỗi lượt chơi gồm 2 món thật và 1 troll. GuBot và vết xé dùng chung lưới Binary Matrix. Vật phẩm clay SVG 2.5D xuất hiện từ vết xé. GuBot có thoại chữ định sẵn, đổi dáng miệng và phát tiếng cảm thán ngắn khi người chơi bật âm thanh.
+- Hai pack dữ liệu mẫu, mỗi lượt chơi gồm 2 món thật và 1 troll. GuBot là nhân vật clay 2.5D. Binary Matrix mở vết xé, phản hồi chạm và diễn mood theo sự kiện game. Vật phẩm clay SVG 2.5D xuất hiện từ vết xé. GuBot có thoại chữ định sẵn và phát tiếng cảm thán ngắn khi người chơi bật âm thanh. Lượt món giấy dát vàng thử nhép miệng theo nhịp thoại, nheo mắt và cười chữa quê.
 - Mobile-first. Người chơi có Thích, Không hợp, Bỏ qua, Undo và nút thay cho swipe. Âm thanh tắt mặc định, có reduced motion và giữ tiến độ lúc reload.
 - Review cho xác nhận 0–3 hướng quà thật. Report chỉ chứa các hướng đã được xác nhận sau khi người nhận đồng ý chia sẻ. Với 0 hướng đã chia sẻ, report hiển thị chưa có tín hiệu đủ rõ. Đây là quy ước chuẩn hóa cho Spike A, giải quyết khác biệt với v1.1 từng đề xuất thêm nhóm Không hợp/Bỏ qua.
 - Link sender và receiver có quyền riêng, được kiểm tra phía server. Receiver không được đọc report hay ngân sách. Sender chưa có consent không đọc được kết quả. Nếu share thành công, Report v0 minh họa món cụ thể và mẹo chọn. Catalog, version và seed được giữ ổn định theo phòng.
@@ -22,11 +22,6 @@ Tier 1 hướng tới 8 món thật + 2 troll, report đủ nội dung và đư�
 
 - Toàn viewport là một trường Matrix liên tục, kể cả dưới header và điều khiển. Giảm tương phản glyph ngay dưới chữ. Phản ứng vuốt thuộc vùng vật phẩm và chạm nền tạo sóng. Các màn review, xin phép và đọc kết quả ưu tiên chữ, giảm chuyển động.
 - Trang chủ giới thiệu GiftU rồi để GuBot hỏi khách muốn tặng quà hay được mời chơi. Chỉ người tặng được hỏi đã có quà chưa. 1A có phần giải thích và trạng thái đang phát triển. 1B giải thích một ván ba lượt, có xem trước lời chào và sao chép lời mời chỉnh sửa được với link chơi. Người tặng tự gửi tin và giữ riêng link kết quả. Người nhận có link đi thẳng vào trò tương ứng và tự quyết việc chia sẻ. Khách được mời nhưng chưa mở link được hướng dẫn tìm lại tin nhắn hoặc chơi demo.
-- Bản UAT thử lưới dày hơn, thân GuBot đặc hơn, nền thở nhẹ và sóng lan khi chạm nền. Khi Thích, quà đập lên giữa viewport kèm hợp âm sáng nguyên bản. Khi Không hợp, glyph xoáy xuống kéo quà chìm, kèm tiếng nước xả tổng hợp. Reduced motion bỏ chuyển động lớn.
-- Chỉ số `0` và `1` tạo hình mọi thành phần trực quan trong cảnh Matrix, gồm GuBot, mắt, miệng, giọt kem và vết xé. Vật phẩm là ngoại lệ đã chốt theo UAT: clay SVG 2.5D xuất hiện khi lưới số dạt ra hai mép. Mỗi ô có tối đa một số màu phẳng hoặc để trống. Nền trắng ngà giữ màu phẳng xuyên suốt. Không vẽ gradient phủ nền, mảng màu, đường viền, stroke, glow, sprite hoặc hình đệm giữa các số. Hình học nội bộ có thể chọn ô nhưng không được vẽ ra cảnh.
-- GuBot là kem ốc quế tan lệch một bên và tụ từ cùng lưới số với vùng nền. Khi đi qua rìa silhouette, thay đổi dần tỷ lệ ô có số và cách chọn màu từng số. Giữ nét của từng số rõ. Mắt nheo ước lệ bằng mật độ ô.
-- **Miệng là kênh biểu cảm chính.** Miệng đọc sắc như một nét vẽ nhờ một dải ô số tương phản cao. Từng ô trong miệng vẫn là số, với khoảng trắng ngà giữa ký tự. Không viền hay vẽ nét liền đè lên lưới.
-- Tách pose và timing của miệng khỏi thân để thay đổi độ cong, độ mở và độ lệch. Miệng neo theo mặt khi thân biến dạng. Mỗi frame kết xuất pose thành tập ô số trên cùng lưới. Pose mặc định tự tin, nhiệt huyết. Các pose khác gồm khoe khoang, xin lỗi, ngu ngơ và kiệt sức.
-- Kiểm bằng cách phóng to miệng, rìa và giọt rơi. Ngoài nét glyph, toàn bộ vùng cảnh phải là nền trắng ngà. Kiểm cả lúc đổi pose và chạy hiệu ứng.
-
-- [Baseline GuBot đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png) ghi lại dáng kem, phối màu, rìa mềm và nét cười mặc định. Dùng hình để đối chiếu thiết kế khi triển khai theo quy tắc lưới ở trên.
+- Ngày 23/11/2026, chủ dự án chốt GuBot clay 2.5D. Giữ silhouette kem tan lệch và nét cười lệch từ [baseline đã duyệt](../assets/mockups/gubot/gubot-melting-cone-smirk-v1.png). Tạo hình clay v1 đang thử nghiệm.
+- Matrix phủ màn hình bằng glyph 0/1, dợn nhẹ khi chờ và lan sóng từ vị trí chạm. Khi hiện quà, glyph dạt ra hai bên. Khi Thích, glyph lan từ vùng va đập. Khi Không hợp, glyph cuộn xoáy kéo vật phẩm xuống. Reduced motion tắt chuyển động lớn.
+- GuBot dùng một atlas WebP với thân, bóng, chóp kem, giọt clay, ba dáng mắt và năm dáng miệng. Các lớp dùng chung gốc tọa độ. Cảnh giấy dát vàng thử nheo mắt, nhép câu hiện trên màn, liếc xuống và cười chữa quê trong cùng mốc thời gian với hiệu ứng Matrix. Lip-sync theo tiếng nói thuộc phiên bản sau.

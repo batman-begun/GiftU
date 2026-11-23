@@ -9,6 +9,7 @@
 ## Index
 
 - [GuBot](mockups/gubot/) — baseline tạo hình kem tan và nét cười bằng số.
+- [Atlas GuBot clay v1](../sites/web/gubot-clay-v1.webp) — bản thử runtime từ hình clay gốc dựng bằng Blender. Atlas 4 × 3 ô, đọc theo hàng: bóng, thân, chóp, giọt, 3 dáng mắt và 5 dáng miệng.
 - [Vật phẩm clay 2.5D](../sites/web/clay-gifts.svg) — năm SVG tự vẽ cho Spike A, ứng viên chờ duyệt trên máy thật.
 - [Asset mẫu](samples/) — index sẽ được bổ sung khi có mẫu đầu tiên.
 
