@@ -1,9 +1,8 @@
 export function roomLink(hash) {
   const params = new URLSearchParams(hash.slice(1));
-  const play = params.getAll('play');
-  const report = params.getAll('report');
-  const tokens = [...play, ...report];
-  if (!tokens.length) return { mode: 'demo' };
-  if (tokens.length !== 1 || !/^[a-f0-9]{64}$/.test(tokens[0])) return { mode: 'invalid' };
-  return { mode: play.length ? 'play' : 'report', token: tokens[0] };
+  const roles = ['play', 'report', 'hunt'];
+  const links = roles.flatMap(mode => params.getAll(mode).map(token => ({ mode, token })));
+  if (!links.length) return { mode: 'demo' };
+  if (links.length !== 1 || !/^[a-f0-9]{64}$/.test(links[0].token)) return { mode: 'invalid' };
+  return links[0];
 }

@@ -7,8 +7,10 @@ test('only an unambiguous, complete room link selects a role', () => {
   assert.deepEqual(roomLink(''), { mode: 'demo' });
   assert.deepEqual(roomLink('#play=' + token), { mode: 'play', token });
   assert.deepEqual(roomLink('#report=' + token), { mode: 'report', token });
+  assert.deepEqual(roomLink('#hunt=' + token), { mode: 'hunt', token });
   for (const hash of ['#play=', '#report', '#play=a', '#play=&report=' + token,
-    '#play=' + token + '&report=' + token, '#play=' + token + '&play=' + token]) {
+    '#play=' + token + '&report=' + token, '#play=' + token + '&play=' + token, '#hunt=',
+    '#hunt=' + token + '&report=' + token, '#play=' + token + '&hunt=' + token]) {
     assert.deepEqual(roomLink(hash), { mode: 'invalid' }, hash);
   }
 });

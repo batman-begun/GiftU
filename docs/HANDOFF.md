@@ -1,5 +1,12 @@
 # Bàn giao hiện tại
 
+## Report v0 và Hunt 1A · GiftU v0.5.0
+
+- GuBot clay v0.4.4 đã được chủ dự án UAT và duyệt ngày 23/11/2026.
+- Report riêng hiện ba gợi ý mua và một mẹo cho mỗi hướng đã chia sẻ. Vào cùng form hunt từ report hoặc nhánh người tặng “Đã có quà”. Mỗi hunt có một câu đố và một lời nhắn, lưu qua migration `0001_hunts`, hết hạn sau 7 ngày.
+- Chrome preview đã đi qua các tab riêng từ lời mời, lượt đoán, consent, report, xem trước hunt, tạo link, thử đáp án sai và mở quà bằng đáp án không dấu. Đã kiểm cả đường vào 1A trực tiếp. `npm test` kiểm quyền link, consent, báo cáo rỗng, hết hạn và dữ liệu reveal.
+- Việc tiếp theo là UAT một vòng gửi thật trên Android. Phạm vi mở rộng hunt và catalog xem trong [spec](PRODUCT.md).
+
 ## GuBot clay · Spike A v0.4.4 · Sites version 8
 
 **23/11/2026** · [Live Testbed](https://giftu.batmanbegun.chatgpt.site/) · [PR #5](https://github.com/batman-begun/GiftU/pull/5)
@@ -8,7 +15,7 @@
 
 - Bản live thay hình GuBot trên trang mở và trong game bằng atlas clay 2.5D. Mười hai ô dùng chung một WebP 19.272 byte. Canvas giữ sóng, nhịp thở và hiệu ứng theo lượt chơi. Service worker cache atlas cùng app shell.
 - Chrome preview đã kiểm GuBot xuất hiện bên món giấy dát vàng, bấm Không hợp khi tắt tiếng, rồi chuyển sang Nến thơm. Chạy lại bằng `npm run dev`, chọn “Tôi được mời chơi” và chơi thử. `npm test` kiểm Worker, Matrix và định dạng/dung lượng atlas.
-- Việc tiếp theo là UAT Android thật, ưu tiên độ rõ của miệng, nhịp liếc xuống và cười chữa quê. Phần dưới ghi lại bản live trước lần triển khai clay.
+- Độ rõ miệng, nhịp liếc và nụ cười đã qua UAT của chủ dự án. Phần dưới ghi lại bản live trước lần triển khai clay.
 
 
 **22/11/2026 · Spike A v0.4.3 · Sites version 7** · [Mở GiftU Live Testbed](https://giftu.batmanbegun.chatgpt.site/).

@@ -347,3 +347,62 @@ dialog::backdrop { background: var(--scrim); }
   0%, 100% { transform: none; }
   50% { transform: scale(1.012, .985); }
 }
+
+:is([data-screen="hunt-create"], [data-screen="hunt-play"], [data-screen="report"]) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  align-items: start;
+}
+:is([data-screen="hunt-create"], [data-screen="hunt-play"], [data-screen="report"]) .scene {
+  display: none;
+}
+:is([data-screen="hunt-create"], [data-screen="hunt-play"], [data-screen="report"]) .experience {
+  width: min(100%, 39rem);
+  justify-self: center;
+  padding-block: clamp(1.25rem, 5dvh, 3.5rem);
+}
+#hunt-panel, #hunt-panel form, #hunt-panel label, .report-pick {
+  display: grid;
+  gap: .65rem;
+}
+#hunt-panel label { gap: .3rem; }
+#hunt-panel :is(input, textarea) {
+  width: 100%;
+  padding: .65rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: .55rem;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+#hunt-panel textarea { resize: vertical; }
+#hunt-panel button, #hunt-panel a { justify-self: start; }
+.hunt-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: .8rem 1rem;
+  border-inline-start: 2px solid var(--petal-line);
+  background: var(--surface);
+}
+.hunt-status { color: var(--accent); }
+.hunt-reveal {
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--petal-line);
+  border-radius: .75rem;
+  background: var(--petal);
+  color: var(--petal-ink);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+}
+.report-pick {
+  padding: .9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+  background: var(--surface);
+}
+.report-pick h3 { margin: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .hunt-reveal { animation: hunt-reveal .45s ease-out both; }
+}
+@keyframes hunt-reveal {
+  from { opacity: 0; transform: translateY(.55rem); }
+}
