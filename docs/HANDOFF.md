@@ -1,6 +1,11 @@
 # Bàn giao hiện tại
 
-## Report v0 và Hunt 1A · GiftU v0.5.0
+## Report v0 và Hunt 1A · GiftU v0.5.0 · Sites version 9
+
+**23/11/2026** · [Live Testbed](https://giftu.batmanbegun.chatgpt.site/) · [PR #6](https://github.com/batman-begun/GiftU/pull/6)
+
+- GitHub merge `cffd70f37aa313ca566cbf3e418fb6cc9ea92b54`, source Sites `3dfb62ec0a561b8d2fd98132a5f57ea56c446ffc`. Rollback là Sites version 8.
+- Live smoke kiểm sáu asset khớp byte, tạo phòng GuBot, consent, report, tạo hunt, thử sai, mở quà và quyền truy cập tách biệt. Chrome live đã mở form từ nhánh “Đã có quà”.
 
 - GuBot clay v0.4.4 đã được chủ dự án UAT và duyệt ngày 23/11/2026.
 - Report riêng hiện ba gợi ý mua và một mẹo cho mỗi hướng đã chia sẻ. Vào cùng form hunt từ report hoặc nhánh người tặng “Đã có quà”. Mỗi hunt có một câu đố và một lời nhắn, lưu qua migration `0001_hunts`, hết hạn sau 7 ngày.
